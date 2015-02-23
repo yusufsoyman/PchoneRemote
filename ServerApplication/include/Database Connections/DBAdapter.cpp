@@ -100,6 +100,7 @@ bool DBAdapter::setDbType(const int &ty) //function to change db type in runtime
         disconnect(errorCode); //we should disconnect communication if there is any
     }
     type = ty;
+    return true;
 }
 
 bool DBAdapter::connect (const char *ip, const int port, const char *user, const char *pass, int &errorCode) //connects database and resturns the result
