@@ -186,7 +186,7 @@ bool DBAdapter::connect(const char *filename, int &errorCode)
 }
 
 
-//FIXME:Continue for SQLITE with following methods
+
 bool DBAdapter::disconnect (int &errorCode) //disconnect from database and return the result
 {
     char buffer[1024];
@@ -198,19 +198,43 @@ bool DBAdapter::disconnect (int &errorCode) //disconnect from database and retur
                                    //This function doesn't return any error and always succeeds.
         isConnected = false;
         errorCode = 0;
-        char buffer[1024];
         sprintf(buffer, "%s - %d: MySQL connection terminated", __FILE__, __LINE__);
         Logger::printInfoLog(buffer);
         return true;
     }
     else
     {
-        isConnected = false;
-        errorCode = 0;
+        if(type == SQLITE)
+        {
+            int res;
+            res = sqlite3_close(SQlitedb);
+            if (res == SQLITE_OK)
+            {
+                sprintf(buffer, "%s - %d: SQLite connection terminated", __FILE__, __LINE__);
+                Logger::printInfoLog(buffer);
+                isConnected = false;
+                errorCode = 0;
+                return true;
+            }
+            else
+            {
+                sprintf(buffer, "%s - %d: SQLite connection terminated", __FILE__, __LINE__);
+                Logger::printInfoLog(buffer);
+                isConnected = true;
+                errorCode = 4;
+                return false;
+            }
+        }
+        else
+        {
+            //Other DBs
+        }
         return true;
         //Do other DB disconnections
     }
 }
+
+//FIXME:Continue for SQLITE with following methods
 bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to connect
 {
     char buffer[1024];
