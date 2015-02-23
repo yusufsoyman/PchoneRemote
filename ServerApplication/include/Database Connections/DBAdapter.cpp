@@ -144,6 +144,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
     }
     else
     {
+        return true;
             //Do other DB connections
     }
 }
