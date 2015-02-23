@@ -114,7 +114,6 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
         int err = mysql_errno(&myInit);
         if(err != 0)
         {
-            char buffer[1024];
             sprintf(buffer, "%s - %d: Can't connect to mysql DB", __FILE__, __LINE__);
             Logger::printDebugLog(buffer);
             if(err == 1045)
@@ -130,8 +129,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
         }
         else
         {
-            char buffer[1024];
-            sprintf(buffer, "%s - %d: MySQL connection established", __FILE__, __LINE__);
+            sprintf(buffer, "%s - %d: MySQL connection is established", __FILE__, __LINE__);
             Logger::printInfoLog(buffer);
             isConnected = true;
             errorCode = 0;
@@ -140,7 +138,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
     }
     else if (type == SQLITE)
     {
-        connect();
+        return connect(DEFAULT_SQLITE_DBNAME, errorCode);
     }
     else
     {
@@ -175,6 +173,8 @@ bool DBAdapter::connect(const char *filename, int &errorCode)
         }
         else
         {
+            sprintf(buffer, "%s - %d: SQLITE connection is established", __FILE__, __LINE__);
+            Logger::printInfoLog(buffer);
             isConnected = true;
             errorCode = 0;
             return true;
