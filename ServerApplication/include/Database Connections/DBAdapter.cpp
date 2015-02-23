@@ -138,6 +138,8 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
     }
     else if (type == SQLITE)
     {
+        sprintf(buffer, "%s - %d: Ommitting IP, port, user, pass information since this is SQLITE connection", __FILE__, __LINE__);
+        Logger::printWarnLog(buffer);
         return connect(DEFAULT_SQLITE_DBNAME, errorCode);
     }
     else
