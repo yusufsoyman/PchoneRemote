@@ -11,7 +11,8 @@
  * * * 2: db doesn't exist
  * * * 3: invalid sql query
  * * * 4: problem with disconnect
- * * * 5-1000: unknown (reserved)
+ * * * 5: failed to create sqlfile
+ * * * 6-1000: unknown (reserved)
  * * * bigger than 1000 - SQL server error system (Ex: 1045000 means 1045)
  * type will hold the database that will be connected
  * * possible values are;
