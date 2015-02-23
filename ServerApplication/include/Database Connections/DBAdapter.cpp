@@ -2,7 +2,7 @@
  * DBAdapter.cpp
  * Main Class to manage DB operations
  * Created by: Ozgur Pekcagliyan - 2014-09-26 09:34:38 PM EEST
- * Last edited by: Ozgur Pekcagliyan - 2014-04-10
+ * Last edited by: Ozgur Pekcagliyan - 2015-02-23
  * Notes:
  * errorCode will be used to return specific error values back to user;
  * * Potential error codes are;
