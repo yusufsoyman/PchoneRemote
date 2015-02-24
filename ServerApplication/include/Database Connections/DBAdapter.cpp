@@ -25,6 +25,8 @@
  * * 1: append
 */
 
+//FIXME: Fix syntax errors
+
 #include <string>
 #include <cstring>
 #include <csignal>
@@ -321,7 +323,7 @@ bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded versio
     }
     else if(type == SQLITE)
     {
-        return execQuery(static_cast<void*>sql.c_str(), sql.size(), errorCode);
+        return execQuery((void*)sql.c_str(), sql.size(), errorCode);
     }
     else
     {
@@ -329,6 +331,7 @@ bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded versio
             return true;
     }
 }
+
 bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode) //overloaded version which accepts binary data
 {
     char buffer[1024];
@@ -356,18 +359,18 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
     else if(type == SQLITE)
     {
         char *dummy = NULL;
-        errorCode = sqlite3_exec(SQlitedb, sql.c_str(), callBack, NULL, &dummy) * 1000;
+        errorCode = sqlite3_exec(SQlitedb, static_cast<const char*>(sql), callBack, NULL, &dummy) * 1000;
         if(errorCode != 0)
         {
             sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
             Logger::printErrorLog(buffer);
-            sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, sql.c_str());
+            sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
             Logger::printDebugLog(buffer);
-            return false
+            return false;
         }
         else
         {
-            sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, sql.c_str());
+            sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
             Logger::printDebugLog(buffer);
             return true;
         }
