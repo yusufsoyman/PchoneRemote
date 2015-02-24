@@ -1,6 +1,6 @@
 /* Ozgur Pekcagliyan 2014-11-16
  * Network Handler class definition to build a messenger application server
- * Edit: 2014-11-23 now, it is a generic class for any type of server
+ * Edit: 2015-02-24 now, it is a generic class for any type of server
  */
 
 #include <sys/socket.h> //for sockek operations
@@ -22,7 +22,6 @@
 
 using std::unique_ptr;
 using std::vector;
-//using std::atomic;
 using std::thread;
 using std::mutex;
 using std::string;
