@@ -8,7 +8,6 @@
 
 #include <vector>
 #include <map>
-//#include <atomic>
 #include <thread>
 #include <ctime>
 #include <netinet/in.h>
