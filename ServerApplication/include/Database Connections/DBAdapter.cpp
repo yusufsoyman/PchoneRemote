@@ -241,7 +241,6 @@ bool DBAdapter::disconnect (int &errorCode) //disconnect from database and retur
     }
 }
 
-//FIXME:Continue for SQLITE with following methods
 bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to connect
 {
     char buffer[1024];
@@ -279,6 +278,7 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
     }
 }
 
+//FIXME:Continue for SQLITE with following methods
 /*int DBAdapter::callBack(void* data, int argc, char** argv, char** azColName)
 {
     if(argc > 0)
