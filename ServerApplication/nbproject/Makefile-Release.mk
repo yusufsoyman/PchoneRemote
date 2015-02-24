@@ -41,6 +41,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/include/SoundController/SoundController.o \
 	${OBJECTDIR}/main.o
 
+# Test Directory
+TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
+
+# Test Files
+TESTFILES= \
+	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
 CFLAGS=
@@ -95,6 +101,95 @@ ${OBJECTDIR}/main.o: main.cpp
 
 # Subprojects
 .build-subprojects:
+
+# Build Test Targets
+.build-tests-conf: .build-conf ${TESTFILES}
+${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/networktest.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} 
+
+
+${TESTDIR}/tests/networktest.o: tests/networktest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/networktest.o tests/networktest.cpp
+
+
+.NO_PARALLEL:${OBJECTDIR}/include/Database\ Connections/DBAdapter.o
+${OBJECTDIR}/include/Database\ Connections/DBAdapter_nomain.o: ${OBJECTDIR}/include/Database\ Connections/DBAdapter.o include/Database\ Connections/DBAdapter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/Database\ Connections
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/Database\ Connections/DBAdapter.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/Database\ Connections/DBAdapter_nomain.o include/Database\ Connections/DBAdapter.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/Database\ Connections/DBAdapter.o ${OBJECTDIR}/include/Database\ Connections/DBAdapter_nomain.o;\
+	fi
+
+${OBJECTDIR}/include/Logger/Logger_nomain.o: ${OBJECTDIR}/include/Logger/Logger.o include/Logger/Logger.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/Logger
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/Logger/Logger.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/Logger/Logger_nomain.o include/Logger/Logger.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/Logger/Logger.o ${OBJECTDIR}/include/Logger/Logger_nomain.o;\
+	fi
+
+.NO_PARALLEL:${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o
+${OBJECTDIR}/include/Network\ Handler/NetworkHandler_nomain.o: ${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o include/Network\ Handler/NetworkHandler.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/Network\ Handler
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/Network\ Handler/NetworkHandler_nomain.o include/Network\ Handler/NetworkHandler.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o ${OBJECTDIR}/include/Network\ Handler/NetworkHandler_nomain.o;\
+	fi
+
+${OBJECTDIR}/include/SoundController/SoundController_nomain.o: ${OBJECTDIR}/include/SoundController/SoundController.o include/SoundController/SoundController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/SoundController
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/SoundController/SoundController.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/SoundController/SoundController_nomain.o include/SoundController/SoundController.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/SoundController/SoundController.o ${OBJECTDIR}/include/SoundController/SoundController_nomain.o;\
+	fi
+
+${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/main.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_nomain.o main.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/main.o ${OBJECTDIR}/main_nomain.o;\
+	fi
+
+# Run Test Targets
+.test-conf:
+	@if [ "${TEST}" = "" ]; \
+	then  \
+	    ${TESTDIR}/TestFiles/f1 || true; \
+	else  \
+	    ./${TEST} || true; \
+	fi
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}

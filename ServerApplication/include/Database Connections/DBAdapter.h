@@ -33,10 +33,13 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <memory>
 
 // using namespace std; //FIXME:Remove this line and change everything to std::
 
 #define DEFAULT_SQLITE_DBNAME "defaultSQDB.db"
+
+typedef vector< list< string > > SQL_RET_TYPE;
 
 class DBAdapter
 {
@@ -79,7 +82,7 @@ private:
 	
     int type; //this variable will hold the type of connection
     bool isConnected; //holds the status of connection
-
+    std::unique_ptr< SQL_RET_TYPE > rVal;
     //MYSQL variables start here
     ::MYSQL *myConnection, myInit; //used for mysql operations and holds connection, myInit is not a pointer because we don't want to handle memory operations for it - Ozgur
     //MYSQL_RES *myResult; //holds results of the queries
@@ -87,13 +90,12 @@ private:
 
     //ORACLE variables will be here
 
-    //SQLITE variables and functions will be here
+    //SQLITE variables will be here
     sqlite3 *SQlitedb;
-    int callBack(void *data, int argc, char **argv, char **azColName);
     //Other DB variables will be here
 
     //Here starts special functions
-	
+    int callBack(void *data, int argc, char **argv, char **azColName);
 };
 
 #endif

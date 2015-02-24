@@ -31,6 +31,7 @@
 #include <cstdio>
 #include <vector>
 #include <list>
+#include <memory>
 #include <mysql/mysql.h>
 
 
@@ -278,8 +279,7 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
     }
 }
 
-//FIXME:Continue for SQLITE with following methods
-/*int DBAdapter::callBack(void* data, int argc, char** argv, char** azColName)
+int DBAdapter::callBack(void* data, int argc, char** argv, char** azColName)
 {
     if(argc > 0)
     {
@@ -291,19 +291,19 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
             string temp = argv[i];
             templist.push_back(temp);
         }
-        returnVal.push_back(templist);
+        rVal->push_back(templist);
     }
-}*/
+}
 
 bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded version
 {
+    char buffer[1024];
     if(type == MYSQL) //Mysql
     {
         mysql_query(myConnection, sql.c_str());
         int err = mysql_errno(&myInit);
         if(err != 0)
         {
-            char buffer[1024];
             sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
             Logger::printErrorLog(buffer);
             sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, sql.c_str());
@@ -313,7 +313,6 @@ bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded versio
         }
         else
         {
-            char buffer[1024];
             sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, sql.c_str());
             Logger::printDebugLog(buffer);
             errorCode = 0;
@@ -322,7 +321,7 @@ bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded versio
     }
     else if(type == SQLITE)
     {
-        
+        return execQuery(static_cast<void*>sql.c_str(), sql.size(), errorCode);
     }
     else
     {
@@ -332,33 +331,51 @@ bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded versio
 }
 bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode) //overloaded version which accepts binary data
 {
+    char buffer[1024];
     if(type == MYSQL) //Mysql
     {
-            mysql_real_query(myConnection, static_cast<const char*>(sql), querySize);
-            int err = mysql_errno(&myInit);
-            if(err != 0)
-            {
-                    char buffer[1024];
-                    sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
-                    Logger::printErrorLog(buffer);
-                    sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
-                    Logger::printDebugLog(buffer);
-                    errorCode = err * 1000; //FIXME: Add every possible error code
-                    return false;
-            }
-            else
-            {
-                    char buffer[1024];
-                    sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
-                    Logger::printDebugLog(buffer);
-                    errorCode = 0;
-                    return true;
-            }
+        mysql_real_query(myConnection, static_cast<const char*>(sql), querySize);
+        int err = mysql_errno(&myInit);
+        if(err != 0)
+        {
+            sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
+            Logger::printErrorLog(buffer);
+            sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
+            Logger::printDebugLog(buffer);
+            errorCode = err * 1000; //FIXME: Add every possible error code
+            return false;
+        }
+        else
+        {
+            sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
+            Logger::printDebugLog(buffer);
+            errorCode = 0;
+            return true;
+        }
+    }
+    else if(type == SQLITE)
+    {
+        char *dummy = NULL;
+        errorCode = sqlite3_exec(SQlitedb, sql.c_str(), callBack, NULL, &dummy) * 1000;
+        if(errorCode != 0)
+        {
+            sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
+            Logger::printErrorLog(buffer);
+            sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, sql.c_str());
+            Logger::printDebugLog(buffer);
+            return false
+        }
+        else
+        {
+            sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, sql.c_str());
+            Logger::printDebugLog(buffer);
+            return true;
+        }
     }
     else
     {
-            errorCode = 0;
-            return true;
+        errorCode = 0;
+        return true;
     }
 }
 bool DBAdapter::insertData(const string &fields, const string& values, const string &table, int &errorCode) /*inserts data into specific tables
@@ -377,6 +394,10 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
 							*/
 {
     string sql = "select " + fields + " from " + table + " where " + condition;
+    if(type == SQLITE)
+    {
+        rVal = std::unique_ptr< SQL_RET_TYPE >(returnVal);
+    }
     bool rValue = execQuery(static_cast<const void*>(sql.c_str()), sql.size(), errorCode);
     if(rValue == false)
     {
@@ -406,8 +427,8 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
     }
     else
     {
-            errorCode = 0;
-            return true;
+        errorCode = 0;
+        return true;
     }
 }
 bool DBAdapter::selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode, int appendFlag)
@@ -434,11 +455,11 @@ bool DBAdapter::updateData(const string &fields, const string& values, const str
     size_t fieldPos, valuePos;
     while((fieldPos = tempFields.find(", ")) != string::npos && (valuePos = tempValues.find(", ")) != string::npos)
     {
-            fieldTok = tempFields.substr(0, fieldPos);
-            valueTok = tempValues.substr(0, valuePos);
-            sql += fieldTok + " = " + valueTok + " , ";
-            tempValues.erase(0, valuePos + 2);
-            tempFields.erase(0, fieldPos + 2);
+        fieldTok = tempFields.substr(0, fieldPos);
+        valueTok = tempValues.substr(0, valuePos);
+        sql += fieldTok + " = " + valueTok + " , ";
+        tempValues.erase(0, valuePos + 2);
+        tempFields.erase(0, fieldPos + 2);
     }
     sql += tempFields + " = " + tempValues + ' ';
     sql += " where " + condition; 
