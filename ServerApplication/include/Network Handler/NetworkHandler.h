@@ -20,7 +20,7 @@ public:
     enum CONN_TYPE {TCP = 1, UDP = 2};
     enum PROT_TYPE {IPV4 = 1, IPV6 = 2};
     NetworkHandler(); // Default constructor, TCP for default
-    ~NetworkHandler();
+    virtual ~NetworkHandler();
    // NetworkHandler(const int &); // Constructor to select connection type
    // NetworkHandler(const int &,const int&); // Constructor to select connection type and ipv6
     bool listen(const int &port, const int &clientCount = 100); //This will open port and start listening
