@@ -1,6 +1,6 @@
 /* Ozgur Pekcagliyan 2014-11-16
  * Network Handler class definition to build a messenger application server
- * Edit: 2014-11-23 now, it is a generic class for any type of server
+ * Edit: 2015-02-24, it is a generic class for any type of server
  */
 
 #ifndef NETWORKHANDLER_H
