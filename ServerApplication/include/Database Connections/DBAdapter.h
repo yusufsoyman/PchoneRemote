@@ -87,9 +87,9 @@ private:
 
     //ORACLE variables will be here
 
-    //SQLITE variable will be here
+    //SQLITE variables and functions will be here
     sqlite3 *SQlitedb;
-
+    int callBack(void *data, int argc, char **argv, char **azColName);
     //Other DB variables will be here
 
     //Here starts special functions
