@@ -91,6 +91,9 @@ private:
     //SQLITE variables will be here
     sqlite3 *SQlitedb;
     //Other DB variables will be here
+    
+    //Logger object is here
+    Logger *logger;
 
 public:
     //Here starts special functions
