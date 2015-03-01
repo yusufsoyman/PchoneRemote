@@ -13,6 +13,7 @@
 #include <netinet/in.h>
 #include <sys/select.h>
 
+#include "Logger.h"
 
 class NetworkHandler
 {
