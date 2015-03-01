@@ -32,8 +32,9 @@
 #include <cstdio>
 #include <vector>
 #include <list>
-#include <memory>
 #include <mysql/mysql.h>
+#include <sqlite3.h> 
+
 
 
 using std::string;
@@ -303,6 +304,7 @@ int callBack(void* data, int argc, char** argv, char** azColName)
         }
         val->rVal->push_back(templist);
     }
+    return 0;
 }
 
 bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded version
@@ -349,7 +351,7 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
         int err = mysql_errno(&myInit);
         if(err != 0)
         {
-            sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
+            sprintf(buffer, "%s - %d: Can't execute the sql query. Return code: %d", __FILE__, __LINE__, err);
             Logger::printErrorLog(buffer);
             sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
             Logger::printDebugLog(buffer);
@@ -370,7 +372,7 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
         errorCode = sqlite3_exec(SQlitedb, static_cast<const char*>(sql), callBack, (void*)this, &dummy) * 1000; //FIXME: Dangerous to pass this pointer. Think something more sensible
         if(errorCode != 0)
         {
-            sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
+            sprintf(buffer, "%s - %d: Can't execute the sql query. Return code: %d. Message is: %s.", __FILE__, __LINE__, errorCode, dummy);
             Logger::printErrorLog(buffer);
             sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
             Logger::printDebugLog(buffer);
