@@ -1,5 +1,11 @@
-//Windows sound control codes is learned from http://www.codeproject.com/Tips/233484/Change-Master-Volume-in-Visual-Cplusplus
-
+/* 
+ * File:   soundTest.cpp
+ * Author: zgrw
+ *
+ * Created on Feb 23, 2015, 9:50:19 PM
+ * Last edited by: Ozgur Pekcagliyan - 2015-03-01
+ * Windows sound control codes is learned from http://www.codeproject.com/Tips/233484/Change-Master-Volume-in-Visual-Cplusplus
+ */
 
 
 #include <cmath>
