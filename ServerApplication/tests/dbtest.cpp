@@ -19,69 +19,71 @@ using namespace std;
 
 
 DBAdapter dbConn (DBAdapter::SQLITE);
+Logger * logger;
 
 void sigHandler(int sig)
 {
-        char buffer[128];
-        sprintf(buffer, "%s - %d: SIGTERM caught", __FILE__, __LINE__);
-        Logger::printInfoLog(buffer);
-        Logger::finalize();
-        int dummy;
-        dbConn.disconnect(dummy);
-        signal(sig, SIG_DFL);
-        raise(sig);
+    char buffer[128];
+    sprintf(buffer, "%s - %d: SIGTERM caught", __FILE__, __LINE__);
+    logger -> printInfoLog(buffer);
+    logger -> finalize();
+    int dummy;
+    dbConn.disconnect(dummy);
+    signal(sig, SIG_DFL);
+    raise(sig);
 }
 
 
 int main(int argv, char **argc)
 {
-        signal(SIGTERM, sigHandler);
-        signal(SIGINT, sigHandler);
-        Logger::setLogConfig("./","test.log", Logger::DEBUG);
+    logger = Logger::getInstance();
+    signal(SIGTERM, sigHandler);
+    signal(SIGINT, sigHandler);
+    logger -> setLogConfig("./","test.log", Logger::DEBUG);
 //      DBAdapter dbConn (DBAdapter::MYSQL);
-        int err;
+    int err;
 
-        dbConn.connect("test.db", err);
-        if(err !=0 )
+    dbConn.connect("test.db", err);
+    if(err !=0 )
+    {
+        cout<<err<<endl;
+        return 1;
+    }
+
+
+    dbConn.execQuery("CREATE TABLE test ( id int(11) , name varchar(20) ,surname varchar(20))", err);
+
+
+
+    dbConn.insertData("id, name, surname", "1, 'sdf', '534'", "test", err);
+
+    vector< list< string > >  myresult;
+    dbConn.selectData("id, name, surname", "test", myresult, err);
+    for(int i = 0; i < myresult.size(); i++)
+    {
+        for(list <string>::iterator it = myresult[i].begin(); it != myresult[i].end(); it++)
         {
-                cout<<err<<endl;
-                return 1;
+            cout<<*it<<' ';
         }
-        
-        
-        dbConn.execQuery("CREATE TABLE test ( id int(11) , name varchar(20) ,surname varchar(20))", err);
+        cout<<endl;
+    }
 
-        
-        
-        dbConn.insertData("id, name, surname", "1, 'sdf', '534'", "test", err);
+    dbConn.deleteData("id > 15", "test", err);
+    dbConn.updateData("name, surname", "'jane', 'doe'", "test", err);
 
-        vector< list< string > >  myresult;
-        dbConn.selectData("id, name, surname", "test", myresult, err);
-        for(int i = 0; i < myresult.size(); i++)
+    dbConn.selectData("id, name, surname", "test", myresult, err);
+    for(int i = 0; i < myresult.size(); i++)
+    {
+        for(list <string>::iterator it = myresult[i].begin(); it != myresult[i].end(); it++)
         {
-                for(list <string>::iterator it = myresult[i].begin(); it != myresult[i].end(); it++)
-                {
-                        cout<<*it<<' ';
-                }
-                cout<<endl;
+            cout<<*it<<' ';
         }
-
-        dbConn.deleteData("id > 15", "test", err);
-        dbConn.updateData("name, surname", "'jane', 'doe'", "test", err);
-
-        dbConn.selectData("id, name, surname", "test", myresult, err);
-        for(int i = 0; i < myresult.size(); i++)
-        {
-                for(list <string>::iterator it = myresult[i].begin(); it != myresult[i].end(); it++)
-                {
-                        cout<<*it<<' ';
-                }
-                cout<<endl;
-        }
-        dbConn.disconnect(err);
-        Logger::finalize();
+        cout<<endl;
+    }
+    dbConn.disconnect(err);
+    logger -> finalize();
 //      cout<<err<<endl;
-        return 0;
+    return 0;
 }
 
 
