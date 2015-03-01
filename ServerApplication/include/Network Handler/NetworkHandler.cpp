@@ -387,6 +387,7 @@ bool NetworkHandler::shutdown()
     mtxfd.unlock();
 #ifdef WIN32
     closesocket(sockfd);
+    WSACleanup();
 #else
     close(sockfd);
 #endif
