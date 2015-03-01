@@ -2,7 +2,7 @@
  * Logger.cpp
  * Main Class to manage Logging operations
  * Created by: Ozgur Pekcagliyan - 2014-09-28 08:19:56 PM EEST
- * Last edited by: Ozgur Pekcagliyan - 2014-10-25 11:02:03 PM EEST
+ * Last edited by: Ozgur Pekcagliyan - 2015-03-01
  * Notes:
  * logLevel will be used to define level of verbosing
  * * Potential error codes are;
