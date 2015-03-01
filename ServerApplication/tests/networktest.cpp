@@ -50,6 +50,7 @@ void NetworkTest::onClose(const int &fd, const struct sockaddr_in &remote)
 }
 
 NetworkTest nt;
+Logger *logger;
 
 void sigHandler(int sig)
 {
@@ -62,22 +63,23 @@ void sigHandler(int sig)
     {
         sprintf(buffer, "%s - %d: SIGINT caught", __FILE__, __LINE__);
     }
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
     nt.shutdown();
-    Logger::finalize();
+    logger -> finalize();
     signal(sig, SIG_DFL);
     raise(sig);
 }
 
 
 int main(int argc, char** argv) {
+    logger = Logger::getInstance();
     signal(SIGTERM, sigHandler);
     signal(SIGINT, sigHandler);
-    Logger::setLogConfig("./","test.log", Logger::DEBUG, true);
+    logger -> setLogConfig("./","test.log", Logger::DEBUG, true);
 
     nt.listen(1234);
     while(1);
-    Logger::finalize();
+    logger -> finalize();
     return 0;
 
     return (0);

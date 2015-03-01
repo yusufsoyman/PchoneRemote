@@ -3,12 +3,16 @@
  * Edit: 2015-02-24 now, it is a generic class for any type of server
  */
 
+#ifdef WIN32
+#include "winsock2.h"
+#else
 #include <sys/socket.h> //for sockek operations
 #include <netinet/in.h> //sockaddr_in members
 #include <sys/select.h>
 #include <arpa/inet.h> //for inet_ntoa function
 #include <unistd.h> //for close
 //#include <sys/types.h> // older OS's might require this header too. If can't compile, uncomment this line
+#endif
 #include <cstdio> //for sprintf
 #include <csignal> //for signal handling
 #include <vector>
@@ -35,6 +39,7 @@ mutex mtxthr;
 //FIXME: Need to add SSL support
 //FIXME: Use unique and shared pointers
 //FIXME: RECIEVE_SEND_TIME_OUT would be better if it is dynamic
+//FIXME: reinterpret_cast is too expensive think again...
 #define RECIEVE_SEND_TIME_OUT 10 //data should be recieved or sent in 10 seconds
 
 bool threadStarted;
@@ -44,12 +49,13 @@ void connHandler(NetworkHandler*, const int&);
 
 NetworkHandler::NetworkHandler()
 {
+    logger = Logger::getInstance(); // initialize logger
     char buffer[1024];
     sockfd = socket(AF_INET, SOCK_STREAM, 0); //AF_INET = IPv4, SOCK_STREAM = TCP, 0 = protocol which is default
     if(sockfd == -1)
     {
         sprintf(buffer, "%s - %d: Can't open socket. Raising SIGTERM immediately.", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
         raise(SIGTERM);
         isUp = false;
     }
@@ -63,7 +69,7 @@ NetworkHandler::NetworkHandler()
         ipv6 = false;
         raw = true;
         sprintf(buffer, "%s - %d: A new server trying to wake up with sokcet %d..", __FILE__, __LINE__, sockfd);
-        Logger::printDebugLog(buffer);
+        logger -> printDebugLog(buffer);
     }
 }
 
@@ -87,7 +93,7 @@ NetworkHandler::~NetworkHandler()
     {
         char buffer[1024];
         sprintf(buffer, "%s - %d: Unsupported protocol reques. Raising SIGTERM immediately.", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
         raise(SIGTERM);
         isUp = false;
     }
@@ -96,7 +102,7 @@ NetworkHandler::~NetworkHandler()
     {
         char buffer[1024];
         sprintf(buffer, "%s - %d: Can't open socket. Raising SIGTERM immediately.", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
         raise(SIGTERM);
         isUp = false;
     }
@@ -125,7 +131,7 @@ NetworkHandler::~NetworkHandler()
     {
         char buffer[1024];
         sprintf(buffer, "%s - %d: Unsupported protocol reques. Raising SIGTERM immediately.", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
         raise(SIGTERM);
         isUp = false;
     }
@@ -144,7 +150,7 @@ NetworkHandler::~NetworkHandler()
     {
         char buffer[1024];
         sprintf(buffer, "%s - %d: Unsuppoerted domain request. Raising SIGTERM immediately.", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
         raise(SIGTERM);
         isUp = false;
     }
@@ -154,7 +160,7 @@ NetworkHandler::~NetworkHandler()
     {
         char buffer[1024];
         sprintf(buffer, "%s - %d: Can't open socket. Raising SIGTERM immediately.", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
         raise(SIGTERM);
         isUp = false;
     }
@@ -174,7 +180,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
     if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, static_cast<void*>(&yes), sizeof(int)) == -1) //This line configures socket to reuse same port for different sockets.
     {
         sprintf(buffer, "%s - %d: Can't configure socket. Informed caller.", __FILE__, __LINE__);
-        Logger::printWarnLog(buffer);
+        logger -> printWarnLog(buffer);
         isUp = false;
         return false;
     }
@@ -182,7 +188,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
     if(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, static_cast<void*>(&tv), sizeof(struct timeval)) == -1) //This line configures socket to reuse same port for different sockets.
     {
         sprintf(buffer, "%s - %d: Can't configure socket. Informed caller.", __FILE__, __LINE__);
-        Logger::printWarnLog(buffer);
+        logger -> printWarnLog(buffer);
         isUp = false;
         return false;
     }
@@ -190,7 +196,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
     if(setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, static_cast<void*>(&tv), sizeof(struct timeval)) == -1) //This line configures socket to reuse same port for different sockets.
     {
         sprintf(buffer, "%s - %d: Can't configure socket. Informed caller.", __FILE__, __LINE__);
-        Logger::printWarnLog(buffer);
+        logger -> printWarnLog(buffer);
         isUp = false;
         return false;
     }
@@ -198,7 +204,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
     if(ipv6 == true)
     {
         sprintf(buffer, "%s - %d: IPV6 is not implemented currently. Sorry :(", __FILE__, __LINE__);
-        Logger::printWarnLog(buffer);
+        logger -> printWarnLog(buffer);
         isUp = false;
         return false;
 //        serverSock.sin_family = AF_INET6;           //host byte order
@@ -209,7 +215,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
 //        {
 //            char buffer[1024];
 //            sprintf(buffer, "%s - %d: Can't bind socket. Informed caller.", __FILE__, __LINE__);
-//            Logger::printWarnLog(buffer);
+//            logger -> printWarnLog(buffer);
 //            isUp = false;
 //            return false;
 //        }
@@ -224,7 +230,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
         if(bind(sockfd, reinterpret_cast<struct sockaddr *>(&serverSock), sizeof(serverSock)) == -1)
         {
             sprintf(buffer, "%s - %d: Can't bind socket. Informed caller.", __FILE__, __LINE__);
-            Logger::printWarnLog(buffer);
+            logger -> printWarnLog(buffer);
             isUp = false;
             return false;
         }
@@ -233,7 +239,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
     if(::listen(sockfd, clientCount) == -1) //starting to listen port
     {
         sprintf(buffer, "%s - %d: Can't listen. Informed caller.", __FILE__, __LINE__);
-        Logger::printWarnLog(buffer);
+        logger -> printWarnLog(buffer);
         isUp = false;
         return false;
     }
@@ -242,7 +248,7 @@ bool NetworkHandler::listen(const int &port, const int &clientCount)//This will 
     fdmax = sockfd;
     threadHndlr.push_back(thread(listener, this));
     sprintf(buffer, "%s - %d: Server started to listen port %d on %s.", __FILE__, __LINE__, ntohs(serverSock.sin_port), inet_ntoa(serverSock.sin_addr));
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
 //    while(!threadStarted);
 //    mtxthr.lock();
 //    threadStarted = false;//prepare for next thread
@@ -270,7 +276,7 @@ bool NetworkHandler::send(const int &fd, const unsigned char *data, const int &s
         if(send_size <= 0)
         {
             sprintf(buffer, "%s - %d: Couldn't send size of the data which was %d", __FILE__, __LINE__, size);
-            Logger::printErrorLog(buffer);
+            logger -> printErrorLog(buffer);
             return false;
         }
         int sStartTime, sEndTime;
@@ -282,16 +288,16 @@ bool NetworkHandler::send(const int &fd, const unsigned char *data, const int &s
             if(sEndTime - sStartTime >= RECIEVE_SEND_TIME_OUT)
             {
                 sprintf(buffer, "%s - %d: Time out for send operation: %d", __FILE__, __LINE__, fd);
-                Logger::printInfoLog(buffer);
+                logger -> printInfoLog(buffer);
                 break;
             }
             total += send_size;
             if(total <= 0)
             {
                 sprintf(buffer, "%s - %d: Couldn't send size the data.", __FILE__, __LINE__);
-                Logger::printErrorLog(buffer);
+                logger -> printErrorLog(buffer);
                 sprintf(buffer, "%s - %d: The data was: '%s'.", __FILE__, __LINE__, data);
-                Logger::printDebugLog(buffer);
+                logger -> printDebugLog(buffer);
                 return false;
             }
         }
@@ -305,9 +311,9 @@ bool NetworkHandler::send(const int &fd, const unsigned char *data, const int &s
             if(total <= 0)
             {
                 sprintf(buffer, "%s - %d: Couldn't send size the data.", __FILE__, __LINE__);
-                Logger::printErrorLog(buffer);
+                logger -> printErrorLog(buffer);
                 sprintf(buffer, "%s - %d: The data was: '%s'.", __FILE__, __LINE__, data);
-                Logger::printDebugLog(buffer);
+                logger -> printDebugLog(buffer);
                 return false;
             }
         }
@@ -348,13 +354,17 @@ bool NetworkHandler::closeConnection(const int &fd)
         mtxfd.lock();
         FD_CLR(fd, &fdset); // remove from master set
         mtxfd.unlock();
+#ifdef WIN32
+        closesocket(fd);
+#else
         close(fd);
+#endif
         sprintf(buffer, "%s - %d: Connection closed for IP: %s.", __FILE__, __LINE__,  inet_ntoa(sockIPMap[fd].sin_addr));
-        Logger::printInfoLog(buffer);
+        logger -> printInfoLog(buffer);
         onClose(fd, sockIPMap[fd]);
         sockIPMap.erase(fd);
         sprintf(buffer, "%s - %d: Client's socket closed: %d.", __FILE__, __LINE__, fd);
-        Logger::printDebugLog(buffer);
+        logger -> printDebugLog(buffer);
     }
 }
 
@@ -370,13 +380,17 @@ bool NetworkHandler::shutdown()
     }
     int max = (RECIEVE_SEND_TIME_OUT*1000000 > TIME_OUT*1000000 ? RECIEVE_SEND_TIME_OUT*1000000 : TIME_OUT*1000000); //turn everything into microseconds
     sprintf(buffer, "%s - %d: Shutting down the server. Waiting %f seconds for remaining threads.", __FILE__, __LINE__,  (double)max/1000000);
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
     usleep(max + 500000); //give all threads a chance to close themselves
     mtxfd.lock();
     FD_CLR(sockfd, &fdset); // remove from master set
     mtxfd.unlock();
+#ifdef WIN32
+    closesocket(sockfd);
+#else
     close(sockfd);
-    Logger::printInfoLog("Server shutdown complete");
+#endif
+    logger -> printInfoLog("Server shutdown complete");
     return true;
 }
 
@@ -401,6 +415,7 @@ void listener(NetworkHandler *obj)
     int newfd;
     struct sockaddr_in remote;
     char buffer[1024];
+    Logger * logger = Logger::getInstance();
 //    mtxthr.lock();
 //    threadStarted = true;
 //    mtxthr.unlock();
@@ -411,19 +426,23 @@ void listener(NetworkHandler *obj)
             /*if(select(obj->fdmax + 1, &obj->fdset, nullptr, nullptr, &obj->tv) == -1)
             {
                 sprintf(buffer, "%s - %d: Can't instentiate select.", __FILE__, __LINE__);
-                Logger::printErrorLog(buffer);
+                logger -> printErrorLog(buffer);
             }
             else*/ if(obj->isInSet(i) && i == obj->sockfd)
             {
                 addrlen = sizeof(remote);
+#ifdef WIN32
+                if((newfd = accept(obj->sockfd, reinterpret_cast<struct sockaddr*>(&remote), &addrlen))) == -1)
+#else
                 if((newfd = accept(obj->sockfd, reinterpret_cast<struct sockaddr*>(&remote), reinterpret_cast<socklen_t *>(&addrlen))) == -1)
+#endif
                 {
                     if(errno != ECONNABORTED && errno != EINTR && errno != EAGAIN && errno != EWOULDBLOCK)
                     {
                         sprintf(buffer, "%s - %d: Couldn't accept connection. Informed caller.", __FILE__, __LINE__);
-                        Logger::printWarnLog(buffer);
+                        logger -> printWarnLog(buffer);
                         sprintf(buffer, "%s - %d: Errorno: %d.", __FILE__, __LINE__, errno);
-                        Logger::printDebugLog(buffer);
+                        logger -> printDebugLog(buffer);
                     }
                 }
                 else
@@ -436,9 +455,9 @@ void listener(NetworkHandler *obj)
                         obj->fdmax = newfd;
                     }
                     sprintf(buffer, "%s - %d: A new client connected to the server from %s.", __FILE__, __LINE__, inet_ntoa(remote.sin_addr));
-                    Logger::printInfoLog(buffer);
+                    logger -> printInfoLog(buffer);
                     sprintf(buffer, "%s - %d: Clients socket address: %d", __FILE__, __LINE__, newfd);
-                    Logger::printDebugLog(buffer);
+                    logger -> printDebugLog(buffer);
                     obj->sockIPMap[newfd] = remote;
                     obj->onConnect(newfd, remote);
                     obj->threadHndlr.push_back(thread(connHandler, obj, newfd));
@@ -455,6 +474,7 @@ void listener(NetworkHandler *obj)
 
 void connHandler(NetworkHandler* obj, const int &fd)
 {
+    Logger * logger = Logger::getInstance();
     char buffer[1024];
     //unsigned char *recvBuffer; //this will recieve data and will be dynamically allocated
 //    mtxthr.lock();
@@ -476,7 +496,7 @@ void connHandler(NetworkHandler* obj, const int &fd)
         if(currentTime - startTime >= obj->TIME_OUT)
         {
             sprintf(buffer, "%s - %d: Client didn't communicate for a very long time: %s. Connection closed.", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-            Logger::printInfoLog(buffer);
+            logger -> printInfoLog(buffer);
 //            obj->closeConnection(fd);
 //            keepConAlive = false; //close connection
 //            break;
@@ -491,7 +511,7 @@ void connHandler(NetworkHandler* obj, const int &fd)
             if(recv_size < 0)
             {
                 sprintf(buffer, "%s - %d: Couldn't recieve size of the data, closing connection: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                Logger::printInfoLog(buffer);
+                logger -> printInfoLog(buffer);
                 obj->closeConnection(fd);
                 keepConAlive = false; //close connection
 //                break;
@@ -499,9 +519,9 @@ void connHandler(NetworkHandler* obj, const int &fd)
             else if (recv_size == 0)
             {
                 sprintf(buffer, "%s - %d: Connection closed by client: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                Logger::printInfoLog(buffer);
+                logger -> printInfoLog(buffer);
                 sprintf(buffer, "Socket id: %d", fd);
-                Logger::printDebugLog(buffer);
+                logger -> printDebugLog(buffer);
                 obj->closeConnection(fd);
                 keepConAlive = false; //close connection
 //                break;
@@ -520,7 +540,7 @@ void connHandler(NetworkHandler* obj, const int &fd)
                     if(rEndTime - rStartTime >= RECIEVE_SEND_TIME_OUT)
                     {
                         sprintf(buffer, "%s - %d: Time out for recieve operation: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                        Logger::printInfoLog(buffer);
+                        logger -> printInfoLog(buffer);
                         break;
                     }
                     total += recv_size;
@@ -531,14 +551,14 @@ void connHandler(NetworkHandler* obj, const int &fd)
                     if(total == 0)
                     {
                         sprintf(buffer, "%s - %d: Connection closed by client: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                        Logger::printInfoLog(buffer);
+                        logger -> printInfoLog(buffer);
                         sprintf(buffer, "Socket id: %d", fd);
-                        Logger::printDebugLog(buffer);
+                        logger -> printDebugLog(buffer);
                     }
                     else
                     {
                         sprintf(buffer, "%s - %d: Client is down: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                        Logger::printInfoLog(buffer);
+                        logger -> printInfoLog(buffer);
                     }
                     keepConAlive = false; //close connection
                     obj->closeConnection(fd);
@@ -588,14 +608,14 @@ void connHandler(NetworkHandler* obj, const int &fd)
                 if(total == 0)
                 {
                     sprintf(buffer, "%s - %d: Connection closed by client: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                    Logger::printInfoLog(buffer);
+                    logger -> printInfoLog(buffer);
                     sprintf(buffer, "Socket id: %d", fd);
-                    Logger::printDebugLog(buffer);
+                    logger -> printDebugLog(buffer);
                 }
                 else
                 {
                     sprintf(buffer, "%s - %d: Client is down: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-                    Logger::printInfoLog(buffer);
+                    logger -> printInfoLog(buffer);
                 }
                 obj->closeConnection(fd);
                 keepConAlive = false; //close connection
@@ -611,9 +631,9 @@ void connHandler(NetworkHandler* obj, const int &fd)
     if(obj->isInSet(fd))
     {
         sprintf(buffer, "%s - %d: Connection closed for client: %s", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
-        Logger::printInfoLog(buffer);
+        logger -> printInfoLog(buffer);
         sprintf(buffer, "Socket id: %d", fd);
-        Logger::printDebugLog(buffer);
+        logger -> printDebugLog(buffer);
         obj->closeConnection(fd);
     }
 }

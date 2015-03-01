@@ -51,12 +51,14 @@ DBAdapter::DBAdapter()
 :type(MYSQL), isConnected(false), SQlitedb(NULL)
 {
     //Default constructor
+    logger = Logger::getInstance();
     mysql_init(&myInit);
 }
 DBAdapter::DBAdapter(const db_types_t ty)
 :type(ty), isConnected(false), SQlitedb(NULL)
 {
     //A very cool constructor :) // Ozgur
+    logger = Logger::getInstance();
     //constructor to set db type at initialization, imlicit initialization is not allowed
     if(type == MYSQL)//Mysql
     {
@@ -81,7 +83,7 @@ DBAdapter::~DBAdapter()
         {
             char buffer[1024];
             sprintf(buffer, "%s - %d: Can't clean connection. Raising SIGTERM immediately", __FILE__, __LINE__);
-            Logger::printErrorLog(buffer);
+            logger -> printErrorLog(buffer);
             raise(SIGTERM);
         }
         else
@@ -110,7 +112,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
 {
     char buffer[1024];
     sprintf(buffer, "%s - %d: Connection request recieved", __FILE__, __LINE__);
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
     if(type == MYSQL)//Mysql
     {
         myConnection = mysql_real_connect(&myInit, ip, user, pass, NULL , port, NULL, 0);
@@ -118,7 +120,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
         if(err != 0)
         {
             sprintf(buffer, "%s - %d: Can't connect to mysql DB", __FILE__, __LINE__);
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             if(err == 1045)
             {
                 errorCode = 1;
@@ -133,7 +135,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
         else
         {
             sprintf(buffer, "%s - %d: MySQL connection is established", __FILE__, __LINE__);
-            Logger::printInfoLog(buffer);
+            logger -> printInfoLog(buffer);
             isConnected = true;
             errorCode = 0;
             return true;
@@ -142,7 +144,7 @@ bool DBAdapter::connect (const char *ip, const int port, const char *user, const
     else if (type == SQLITE)
     {
         sprintf(buffer, "%s - %d: Ommitting IP, port, user, pass information since this is SQLITE connection", __FILE__, __LINE__);
-        Logger::printWarnLog(buffer);
+        logger -> printWarnLog(buffer);
         return connect(DEFAULT_SQLITE_DBNAME, errorCode);
     }
     else
@@ -156,23 +158,24 @@ bool DBAdapter::connect(const char *filename, int &errorCode)
 {
     char buffer[1024];
     sprintf(buffer, "%s - %d: Connection request recieved", __FILE__, __LINE__);
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
     if (type != SQLITE)
     {
         sprintf(buffer, "%s - %d: Wrong DB function access. DB is not SQLITE", __FILE__, __LINE__);
-        Logger::printErrorLog(buffer);
+        logger -> printErrorLog(buffer);
+        errorCode = 5;
         return false;
     }
     else
     {
         sprintf(buffer, "%s - %d: Opening SQLITE db: %s", __FILE__, __LINE__, filename);
-        Logger::printInfoLog(buffer);
+        logger -> printInfoLog(buffer);
         int res;
         res = sqlite3_open(filename, &SQlitedb);
         if(res != SQLITE_OK)
         {
             sprintf(buffer, "%s - %d: Can't open DB: %s", __FILE__, __LINE__,   sqlite3_errmsg(SQlitedb));
-            Logger::printInfoLog(buffer);
+            logger -> printInfoLog(buffer);
             isConnected = false;
             if(res == SQLITE_CANTOPEN)
             {
@@ -187,7 +190,7 @@ bool DBAdapter::connect(const char *filename, int &errorCode)
         else
         {
             sprintf(buffer, "%s - %d: SQLITE connection is established", __FILE__, __LINE__);
-            Logger::printInfoLog(buffer);
+            logger -> printInfoLog(buffer);
             isConnected = true;
             errorCode = 0;
             return true;
@@ -201,7 +204,7 @@ bool DBAdapter::disconnect (int &errorCode) //disconnect from database and retur
 {
     char buffer[1024];
     sprintf(buffer, "%s - %d: Disconnect request recieved", __FILE__, __LINE__);
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
     if(type == MYSQL) //Mysql
     {
         mysql_close(myConnection); //will be freed bt mysql_close
@@ -209,7 +212,7 @@ bool DBAdapter::disconnect (int &errorCode) //disconnect from database and retur
         isConnected = false;
         errorCode = 0;
         sprintf(buffer, "%s - %d: MySQL connection terminated", __FILE__, __LINE__);
-        Logger::printInfoLog(buffer);
+        logger -> printInfoLog(buffer);
         return true;
     }
     else
@@ -221,7 +224,7 @@ bool DBAdapter::disconnect (int &errorCode) //disconnect from database and retur
             if (res == SQLITE_OK)
             {
                 sprintf(buffer, "%s - %d: SQLite connection terminated", __FILE__, __LINE__);
-                Logger::printInfoLog(buffer);
+                logger -> printInfoLog(buffer);
                 isConnected = false;
                 errorCode = 0;
                 return true;
@@ -229,7 +232,7 @@ bool DBAdapter::disconnect (int &errorCode) //disconnect from database and retur
             else
             {
                 sprintf(buffer, "%s - %d: SQLite connection terminated", __FILE__, __LINE__);
-                Logger::printInfoLog(buffer);
+                logger -> printInfoLog(buffer);
                 isConnected = true;
                 errorCode = 4;
                 return false;
@@ -248,7 +251,7 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
 {
     char buffer[1024];
     sprintf(buffer, "%s - %d: DB selection procedure initiated", __FILE__, __LINE__);
-    Logger::printInfoLog(buffer);
+    logger -> printInfoLog(buffer);
     if(type == MYSQL) //Mysql
     {
         if(mysql_select_db(myConnection, dbName.c_str()) != 0)
@@ -256,7 +259,7 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
             int err = mysql_errno(&myInit);
             char buffer[1024];
             sprintf(buffer, "%s - %d: Can't select DB", __FILE__, __LINE__);
-            Logger::printErrorLog(buffer);
+            logger -> printErrorLog(buffer);
             errorCode = err * 1000; //FIXME: Add every possible error code
             return false;
         }
@@ -264,7 +267,7 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
         {
             char buffer[1024];
             sprintf(buffer, "%s - %d: DB %s successfuly selected", __FILE__, __LINE__, dbName.c_str());
-            Logger::printInfoLog(buffer);
+            logger -> printInfoLog(buffer);
             errorCode = 0;
             return true;
         }
@@ -317,16 +320,16 @@ bool DBAdapter::execQuery(const string &sql, int &errorCode) //overloaded versio
         if(err != 0)
         {
             sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
-            Logger::printErrorLog(buffer);
+            logger -> printErrorLog(buffer);
             sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, sql.c_str());
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             errorCode = err * 1000; //FIXME: Add every possible error code
             return false;
         }
         else
         {
             sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, sql.c_str());
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             errorCode = 0;
             return true;
         }
@@ -352,16 +355,16 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
         if(err != 0)
         {
             sprintf(buffer, "%s - %d: Can't execute the sql query. Return code: %d", __FILE__, __LINE__, err);
-            Logger::printErrorLog(buffer);
+            logger -> printErrorLog(buffer);
             sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             errorCode = err * 1000; //FIXME: Add every possible error code
             return false;
         }
         else
         {
             sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             errorCode = 0;
             return true;
         }
@@ -373,15 +376,15 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
         if(errorCode != 0)
         {
             sprintf(buffer, "%s - %d: Can't execute the sql query. Return code: %d. Message is: %s.", __FILE__, __LINE__, errorCode, dummy);
-            Logger::printErrorLog(buffer);
+            logger -> printErrorLog(buffer);
             sprintf(buffer, "%s - %d: Problem with query \"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             return false;
         }
         else
         {
             sprintf(buffer, "%s - %d: SQL Query successfuly executed on MySQL DB\n\"%s\"", __FILE__, __LINE__, static_cast<const char*>(sql));
-            Logger::printDebugLog(buffer);
+            logger -> printDebugLog(buffer);
             return true;
         }
     }
@@ -398,7 +401,7 @@ bool DBAdapter::insertData(const string &fields, const string& values, const str
 {
 //  int queryLength = fields.size() + values.size() + table.size();
     string sql = "insert into " + table + " ( " + fields + " ) " + " values ( " + values + " )";
-    Logger::printDebugLog(sql.c_str());
+    logger -> printDebugLog(sql.c_str());
     return execQuery(static_cast<const void*>(sql.c_str()), sql.size() + 1, errorCode);
 }
 bool DBAdapter::selectData(const string &fields, const string& condition, const string &table, vector< list< string > >  &returnVal, int &errorCode, int appendFlag) /*select data from specific tables
