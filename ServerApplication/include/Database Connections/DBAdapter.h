@@ -64,11 +64,11 @@ public:
                                                             Example usage:
                                                             insertData("name, surname, age", "'john', 'smith', 52", "users", errorCodeVar);
                                                             */
-    bool selectData(const std::string &fields, const std::string& condition, const std::string &table, std::vector< std::list< std::string > > &returnVal, int &errorCode, int appendFlag = 0); /*select data from specific tables
+    bool selectData(const std::string &fields, const std::string& condition, const std::string &table, SQL_RET_TYPE &returnVal, int &errorCode, int appendFlag = 0); /*select data from specific tables
                                                             Example usage:
                                                             selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
                                                             */
-    bool selectData(const std::string &fields, const std::string &table, std::vector< std::list< std::string > >  &returnVal, int &errorCode, int appendFlag = 0); //overloaded version of select
+    bool selectData(const std::string &fields, const std::string &table, SQL_RET_TYPE  &returnVal, int &errorCode, int appendFlag = 0); //overloaded version of select
     bool deleteData(const std::string& condition, const std::string &table, int &errorCode); /*delete data from specific tables
                                                             Example usage:
                                                             deleteData("name=john and age >= 63", "users", errorCodeVar);
