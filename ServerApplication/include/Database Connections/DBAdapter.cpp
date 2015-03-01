@@ -161,6 +161,7 @@ bool DBAdapter::connect(const char *filename, int &errorCode)
     {
         sprintf(buffer, "%s - %d: Wrong DB function access. DB is not SQLITE", __FILE__, __LINE__);
         Logger::printErrorLog(buffer);
+        errorCode = 5;
         return false;
     }
     else
