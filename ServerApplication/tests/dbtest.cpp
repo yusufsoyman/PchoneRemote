@@ -79,6 +79,7 @@ int main(int argv, char **argc)
                 cout<<endl;
         }
         dbConn.disconnect(err);
+        Logger::finalize();
 //      cout<<err<<endl;
         return 0;
 }
