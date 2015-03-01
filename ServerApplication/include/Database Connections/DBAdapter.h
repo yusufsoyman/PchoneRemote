@@ -34,6 +34,7 @@
 #include <vector>
 #include <list>
 
+#include "Logger.h"
 
 #define DEFAULT_SQLITE_DBNAME "defaultSQDB.db"
 
