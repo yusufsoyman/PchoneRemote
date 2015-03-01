@@ -58,6 +58,7 @@ DBAdapter::DBAdapter(const db_types_t ty)
 :type(ty), isConnected(false), SQlitedb(NULL)
 {
     //A very cool constructor :) // Ozgur
+    logger = Logger::getInstance();
     //constructor to set db type at initialization, imlicit initialization is not allowed
     if(type == MYSQL)//Mysql
     {
