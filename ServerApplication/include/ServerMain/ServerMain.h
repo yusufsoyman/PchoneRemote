@@ -9,7 +9,6 @@
 #define	SERVERMAIN_H
 
 #include <map>
-#include <vector>
 
 #include "NetworkHandler.h"
 #include "Logger.h"
@@ -19,6 +18,7 @@ class ServerMain : public NetworkHandler
 {
 public:
     enum server_messages {ERROR_MSG = 0, HELLO_MSG = 1, INIT_MSG = 2, DENY_MSG = 3, APPROVE_MSG = 4};
+    enum request_messages {MUTE_REQ = 10, INCR_REQ = 11, DECR_REQ = 12, GET_VOL_REQ = 13, PLAY_REQ = 14, STOP_REQ = 15, FWD_REQ = 16, BCKWD_REQ = 17};
     
     ServerMain();
     ~ServerMain();
@@ -29,7 +29,8 @@ public:
 private:
     Logger *logger;
     SoundController sc;
-    std::vector<std::map<int, int>> connTracker; //This will track status of connections (like new connection, established connection), and will used to confirm handshakes
+    bool inControl; //will determine if any client is currently controlling app or not
+    std::map<int, int> connTracker; //This will track status of connections (like new connection, established connection), and will used to confirm handshakes
 };
 
 #endif	/* SERVERMAIN_H */
