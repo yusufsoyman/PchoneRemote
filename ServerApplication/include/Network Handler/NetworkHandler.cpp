@@ -402,6 +402,7 @@ void listener(NetworkHandler *obj)
     int newfd;
     struct sockaddr_in remote;
     char buffer[1024];
+    Logger * logger = Logger::getInstance();
 //    mtxthr.lock();
 //    threadStarted = true;
 //    mtxthr.unlock();
@@ -456,6 +457,7 @@ void listener(NetworkHandler *obj)
 
 void connHandler(NetworkHandler* obj, const int &fd)
 {
+    Logger * logger = Logger::getInstance();
     char buffer[1024];
     //unsigned char *recvBuffer; //this will recieve data and will be dynamically allocated
 //    mtxthr.lock();
