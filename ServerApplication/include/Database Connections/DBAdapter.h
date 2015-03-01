@@ -33,9 +33,7 @@
 #include <string>
 #include <vector>
 #include <list>
-#include <memory>
 
-// using namespace std; //FIXME:Remove this line and change everything to std::
 
 #define DEFAULT_SQLITE_DBNAME "defaultSQDB.db"
 
