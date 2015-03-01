@@ -24,7 +24,7 @@ class Logger
 {
 public:
 	enum log_level_t {NO_LOG = 0, INFO = 1, ERROR = 2, DEBUG = 3};
-        Logger *getInstance(); //Returns and instance pointer to logger class
+        static Logger *getInstance(); //Returns and instance pointer to logger class
         ~Logger();
 	bool printInfoLog(const std::string log); // function for info logs
 	bool printWarnLog(const std::string log); // function will print warn level logs
