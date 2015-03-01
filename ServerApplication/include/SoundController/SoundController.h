@@ -8,6 +8,8 @@
 #ifndef SOUNDCONTROLLER_H
 #define	SOUNDCONTROLLER_H
 
+#include "Logger.h"
+
 #ifdef WIN32
     #include "mmdeviceapi.h"
     #include "endpointvolume.h"
@@ -20,7 +22,7 @@ class SoundController
 {
 public:
     SoundController();
-    ~SoundController();
+    virtual ~SoundController();
     float getCurrentVolumeLevel();
     bool isMuted();
     bool muteUnmute(const int &state = 2); //0: means mute, 1: unmute, 2: change behaviour
@@ -28,6 +30,7 @@ public:
     bool decreaseVolume();
 protected:
     bool setVolume(float);
+    Logger *logger;
 private:
 #ifdef WIN32
     HRESULT hr;
