@@ -9,7 +9,7 @@
 #define	SERVERMAIN_H
 
 #include <map>
-#include <pair>
+#include <utility>
 
 #include "NetworkHandler.h"
 #include "Logger.h"
