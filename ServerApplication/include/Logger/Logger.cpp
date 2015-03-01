@@ -86,6 +86,12 @@ bool Logger::printDebugLog(const string& log) //function will print debug level 
         Logger::printLog(temp);
     }
 }
+
+void Logger::changeLogLevel(const int &newLevel)
+{
+    logLevel = newLevel;
+}
+
 void Logger::setLogConfig(const string& path, const string& fileName, const int& level, const bool& append)
 {
     if(isLogSet != true)

@@ -30,6 +30,7 @@ public:
 	bool printWarnLog(const std::string& log); // function will print warn level logs
 	bool printErrorLog(const std::string& log); //function will print error level logs
 	bool printDebugLog(const std::string& log); //function will print debug level logs
+        void changeLogLevel(const int &newLevel);
 	void setLogConfig(const std::string& path, const std::string& fileName, const int& level, const bool& append = true); //will configure log system to necessary settings
 	void finalize (); //closes log file
 private:
