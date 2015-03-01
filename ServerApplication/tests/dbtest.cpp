@@ -18,7 +18,7 @@
 using namespace std;
 
 
-DBAdapter dbConn (DBAdapter::MYSQL);
+DBAdapter dbConn (DBAdapter::SQLITE);
 
 void sigHandler(int sig)
 {
@@ -53,7 +53,7 @@ int main(int argv, char **argc)
 
         
         
-        dbConn.insertData("name, surname", "'sdf', '534'", "test", err);
+        dbConn.insertData("id, name, surname", "1, 'sdf', '534'", "test", err);
 
         vector< list< string > >  myresult;
         dbConn.selectData("id, name, surname", "test", myresult, err);
