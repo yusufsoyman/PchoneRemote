@@ -91,6 +91,10 @@ void Logger::setLogConfig(const string path, const string fileName, const int le
     if(isLogSet != true)
     {
         isLogSet = true;
+        if(out.is_open())
+        {
+            out.close();
+        }
         string temp(path);
         temp += '/' + fileName;
         if(append == true)
@@ -102,6 +106,10 @@ void Logger::setLogConfig(const string path, const string fileName, const int le
             out.open(temp.c_str(), ofstream::out);
         }
         logLevel = level;
+        string slevel = (level == NO_LOG)? "NO LOG":((level == INFO)? "INFO": ((level == ERROR)? "ERROR": "DEBUG"));
+        char buffer[1024];
+        sprintf(buffer, "Logging system initialized with\n\t\t\t\tPath: %s\n\t\t\t\tFilename: %s\n\t\t\t\tLog level: %s\n\t\t\t\tAppend flag: %s", path.c_str(), fileName.c_str(), slevel.c_str(), (append == 1)?"True":"False");
+        printInfoLog(buffer);
     }
     else
     {
@@ -112,6 +120,8 @@ void Logger::setLogConfig(const string path, const string fileName, const int le
 Logger::Logger() //it is not allowed to have an instance of this class
 {
     isActive = true;
+    setLogConfig("./","default.log", Logger::INFO, true); // Setting default configuration just in case
+    isLogSet = false;
 }
 
 Logger::~Logger()
