@@ -40,6 +40,8 @@ public:
     bool shutdown();
 protected:
     void setSSL(const bool &);
+    
+    Logger *logger;
 private:
     bool isInSet(const int &fd);
     struct sockaddr_in serverSock;
