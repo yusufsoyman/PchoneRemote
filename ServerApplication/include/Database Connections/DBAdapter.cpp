@@ -290,7 +290,15 @@ int callBack(void* data, int argc, char** argv, char** azColName)
         templist.clear();
         for (i = 0; i < argc; ++i)
         {
-            string temp = argv[i];
+            string temp;
+            if(argv[i] != NULL)
+            {
+                temp = argv[i];
+            }
+            else
+            {
+                temp = "N/A";
+            }
             templist.push_back(temp);
         }
         val->rVal->push_back(templist);
@@ -396,6 +404,10 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
 							selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
 							*/
 {
+    if(appendFlag == 0)
+    {
+            returnVal.clear(); //vector should be cleared in order to return healthy results
+    }
     string sql = "select " + fields + " from " + table + " where " + condition;
     if(type == SQLITE)
     {
@@ -405,10 +417,6 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
     if(rValue == false)
     {
             return false;
-    }
-    if(appendFlag == 1)
-    {
-            returnVal.clear(); //vector should be cleared in order to return healthy results
     }
     if(type == MYSQL) //Mysql
     {
