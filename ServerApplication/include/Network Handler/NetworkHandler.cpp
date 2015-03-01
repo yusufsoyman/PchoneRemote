@@ -3,12 +3,16 @@
  * Edit: 2015-02-24 now, it is a generic class for any type of server
  */
 
+#ifdef WIN32
+#include "winsock2.h"
+#else
 #include <sys/socket.h> //for sockek operations
 #include <netinet/in.h> //sockaddr_in members
 #include <sys/select.h>
 #include <arpa/inet.h> //for inet_ntoa function
 #include <unistd.h> //for close
 //#include <sys/types.h> // older OS's might require this header too. If can't compile, uncomment this line
+#endif
 #include <cstdio> //for sprintf
 #include <csignal> //for signal handling
 #include <vector>
@@ -35,6 +39,7 @@ mutex mtxthr;
 //FIXME: Need to add SSL support
 //FIXME: Use unique and shared pointers
 //FIXME: RECIEVE_SEND_TIME_OUT would be better if it is dynamic
+//FIXME: reinterpret_cast is too expensive think again...
 #define RECIEVE_SEND_TIME_OUT 10 //data should be recieved or sent in 10 seconds
 
 bool threadStarted;
@@ -349,7 +354,11 @@ bool NetworkHandler::closeConnection(const int &fd)
         mtxfd.lock();
         FD_CLR(fd, &fdset); // remove from master set
         mtxfd.unlock();
+#ifdef WIN32
+        closesocket(fd);
+#else
         close(fd);
+#endif
         sprintf(buffer, "%s - %d: Connection closed for IP: %s.", __FILE__, __LINE__,  inet_ntoa(sockIPMap[fd].sin_addr));
         logger -> printInfoLog(buffer);
         onClose(fd, sockIPMap[fd]);
@@ -376,7 +385,11 @@ bool NetworkHandler::shutdown()
     mtxfd.lock();
     FD_CLR(sockfd, &fdset); // remove from master set
     mtxfd.unlock();
+#ifdef WIN32
+    closesocket(sockfd);
+#else
     close(sockfd);
+#endif
     logger -> printInfoLog("Server shutdown complete");
     return true;
 }
@@ -418,7 +431,11 @@ void listener(NetworkHandler *obj)
             else*/ if(obj->isInSet(i) && i == obj->sockfd)
             {
                 addrlen = sizeof(remote);
+#ifdef WIN32
+                if((newfd = accept(obj->sockfd, reinterpret_cast<struct sockaddr*>(&remote), &addrlen))) == -1)
+#else
                 if((newfd = accept(obj->sockfd, reinterpret_cast<struct sockaddr*>(&remote), reinterpret_cast<socklen_t *>(&addrlen))) == -1)
+#endif
                 {
                     if(errno != ECONNABORTED && errno != EINTR && errno != EAGAIN && errno != EWOULDBLOCK)
                     {
