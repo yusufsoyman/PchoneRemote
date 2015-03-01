@@ -39,7 +39,7 @@
 
 #define DEFAULT_SQLITE_DBNAME "defaultSQDB.db"
 
-typedef vector< list< string > > SQL_RET_TYPE;
+typedef std::vector< std::list< std::string > > SQL_RET_TYPE;
 
 class DBAdapter
 {
@@ -53,36 +53,36 @@ public:
 
     bool setDbType(const int &ty); //function to change db type in runtime, if there is an active connection, this function will not run
 
-    bool connect (const char *ip, const int port, const char *user, const char *pass, int &errorCode = 0); //connects database and resturns the result
-    bool connect (const char *filename = DEFAULT_SQLITE_DBNAME, int &errorCode = 0); //connects database and resturns the result for sqlite
-    bool disconnect (int &errorCode = 0); //disconnect from database and return the result
-    bool selectDB(const std::string &dbName, int &errorCode = 0); //selecting DB to connect
+    bool connect (const char *ip, const int port, const char *user, const char *pass, int &errorCode); //connects database and resturns the result
+    bool connect (const char *filename, int &errorCode); //connects database and resturns the result for sqlite
+    bool disconnect (int &errorCode); //disconnect from database and return the result
+    bool selectDB(const std::string &dbName, int &errorCode); //selecting DB to connect
     //bool execQuery(const string &sql, int &errorCode, char * reason); //execute a specific user written query, also returns a failure reason as set of chars
-    bool execQuery(const std::string &sql, int &errorCode = 0); //overloaded version
-    bool execQuery(const void *sql, const int& querySize, int &errorCode = 0); //overloaded version which accepts binary data
-    bool insertData(const std::string &fields, const std::string& values, const std::string &table, int &errorCode = 0); /*inserts data into specific tables
+    bool execQuery(const std::string &sql, int &errorCode); //overloaded version
+    bool execQuery(const void *sql, const int& querySize, int &errorCode); //overloaded version which accepts binary data
+    bool insertData(const std::string &fields, const std::string& values, const std::string &table, int &errorCode); /*inserts data into specific tables
                                                             Example usage:
                                                             insertData("name, surname, age", "'john', 'smith', 52", "users", errorCodeVar);
                                                             */
-    bool selectData(const std::string &fields, const std::string& condition, const std::string &table, std::vector< std::list< std::string > > &returnVal, int &errorCode = 0, int appendFlag = 0); /*select data from specific tables
+    bool selectData(const std::string &fields, const std::string& condition, const std::string &table, std::vector< std::list< std::string > > &returnVal, int &errorCode, int appendFlag = 0); /*select data from specific tables
                                                             Example usage:
                                                             selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
                                                             */
-    bool selectData(const std::string &fields, const std::string &table, std::vector< std::list< std::string > >  &returnVal, int &errorCode = 0, int appendFlag = 0); //overloaded version of select
+    bool selectData(const std::string &fields, const std::string &table, std::vector< std::list< std::string > >  &returnVal, int &errorCode, int appendFlag = 0); //overloaded version of select
     bool deleteData(const std::string& condition, const std::string &table, int &errorCode); /*delete data from specific tables
                                                             Example usage:
                                                             deleteData("name=john and age >= 63", "users", errorCodeVar);
                                                             */
-    bool updateData(const std::string &fields, const std::string& values, const std::string &condition, const std::string &table, int &errorCode = 0); /*inserts data to specific tables
+    bool updateData(const std::string &fields, const std::string& values, const std::string &condition, const std::string &table, int &errorCode); /*inserts data to specific tables
                                                             Example usage
                                                             updatetData("name, surname, age", "'john', 'smith', 52", "name=john and age >= 63", "users", errorCodeVar);
                                                             */
-    bool updateData(const std::string &fields, const std::string& values, const std::string &table, int &errorCode = 0); // overloaded version
+    bool updateData(const std::string &fields, const std::string& values, const std::string &table, int &errorCode); // overloaded version
 private:
 	
     int type; //this variable will hold the type of connection
     bool isConnected; //holds the status of connection
-    std::unique_ptr< SQL_RET_TYPE > rVal;
+    SQL_RET_TYPE *rVal;
     //MYSQL variables start here
     ::MYSQL *myConnection, myInit; //used for mysql operations and holds connection, myInit is not a pointer because we don't want to handle memory operations for it - Ozgur
     //MYSQL_RES *myResult; //holds results of the queries
@@ -94,8 +94,9 @@ private:
     sqlite3 *SQlitedb;
     //Other DB variables will be here
 
+public:
     //Here starts special functions
-    int callBack(void *data, int argc, char **argv, char **azColName);
+    friend int callBack(void *data, int argc, char **argv, char **azColName);
 };
 
 #endif

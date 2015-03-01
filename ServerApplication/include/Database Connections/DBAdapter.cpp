@@ -25,7 +25,6 @@
  * * 1: append
 */
 
-//FIXME: Fix syntax errors
 
 #include <string>
 #include <cstring>
@@ -281,8 +280,9 @@ bool DBAdapter::selectDB(const string &dbName, int &errorCode) //selecting DB to
     }
 }
 
-int DBAdapter::callBack(void* data, int argc, char** argv, char** azColName)
+int callBack(void* data, int argc, char** argv, char** azColName)
 {
+    DBAdapter *val = (DBAdapter*)data;
     if(argc > 0)
     {
         int i;
@@ -293,7 +293,7 @@ int DBAdapter::callBack(void* data, int argc, char** argv, char** azColName)
             string temp = argv[i];
             templist.push_back(temp);
         }
-        rVal->push_back(templist);
+        val->rVal->push_back(templist);
     }
 }
 
@@ -359,7 +359,7 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
     else if(type == SQLITE)
     {
         char *dummy = NULL;
-        errorCode = sqlite3_exec(SQlitedb, static_cast<const char*>(sql), callBack, NULL, &dummy) * 1000;
+        errorCode = sqlite3_exec(SQlitedb, static_cast<const char*>(sql), callBack, (void*)this, &dummy) * 1000;
         if(errorCode != 0)
         {
             sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
@@ -399,7 +399,7 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
     string sql = "select " + fields + " from " + table + " where " + condition;
     if(type == SQLITE)
     {
-        rVal = std::unique_ptr< SQL_RET_TYPE >(returnVal);
+        rVal = &returnVal;
     }
     bool rValue = execQuery(static_cast<const void*>(sql.c_str()), sql.size(), errorCode);
     if(rValue == false)

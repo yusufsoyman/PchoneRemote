@@ -26,6 +26,12 @@
                    displayName="Test Files"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f2"
+                     displayName="DatabaseTest"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/dbtest.cpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1"
                      displayName="networktest"
                      projectFiles="true"
@@ -65,6 +71,21 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+        </linkerTool>
+      </folder>
       <item path="include/Database Connections/DBAdapter.cpp"
             ex="false"
             tool="1"
@@ -100,6 +121,8 @@
             flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/dbtest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/networktest.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -139,6 +162,21 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+        </linkerTool>
+      </folder>
       <item path="include/Database Connections/DBAdapter.cpp"
             ex="false"
             tool="1"
@@ -174,6 +212,8 @@
             flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/dbtest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/networktest.cpp" ex="false" tool="1" flavor2="0">
       </item>
