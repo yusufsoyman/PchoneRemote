@@ -367,7 +367,7 @@ bool DBAdapter::execQuery(const void *sql, const int& querySize, int &errorCode)
     else if(type == SQLITE)
     {
         char *dummy = NULL;
-        errorCode = sqlite3_exec(SQlitedb, static_cast<const char*>(sql), callBack, (void*)this, &dummy) * 1000;
+        errorCode = sqlite3_exec(SQlitedb, static_cast<const char*>(sql), callBack, (void*)this, &dummy) * 1000; //FIXME: Dangerous to pass this pointer. Think something more sensible
         if(errorCode != 0)
         {
             sprintf(buffer, "%s - %d: Can't execute the sql query", __FILE__, __LINE__);
