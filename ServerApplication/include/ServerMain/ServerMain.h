@@ -9,10 +9,13 @@
 #define	SERVERMAIN_H
 
 #include <map>
+#include <pair>
 
 #include "NetworkHandler.h"
 #include "Logger.h"
 #include "SoundController.h"
+
+typedef std::map< int, std::pair< sockaddr_in, bool > > CONN_HANDLE_TYPE;
 
 class ServerMain : public NetworkHandler
 {
@@ -30,7 +33,7 @@ private:
     Logger *logger;
     SoundController sc;
     bool inControl; //will determine if any client is currently controlling app or not
-    std::map<int, int> connTracker; //This will track status of connections (like new connection, established connection), and will used to confirm handshakes
+    CONN_HANDLE_TYPE connTracker; //This will track status of connections (like new connection, established connection), and will used to confirm handshakes
 };
 
 #endif	/* SERVERMAIN_H */
