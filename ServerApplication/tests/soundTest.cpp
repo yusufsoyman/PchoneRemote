@@ -34,11 +34,21 @@ void test1() {
         if(in != 3 && in != ERR && in != 0)
         {
             if(in == 'q')
+            {
                 sc.increaseVolume();
+            }
             else if (in == 'w')
+            {
                 sc.decreaseVolume();
+            }
             else if (in == ' ')
+            {
                 sc.muteUnmute();
+            }
+            else if (in == 'x') //quit
+            {
+                break;
+            }
             else
             {
                 cout<<sc.getCurrentVolumeLevel()<<endl;
