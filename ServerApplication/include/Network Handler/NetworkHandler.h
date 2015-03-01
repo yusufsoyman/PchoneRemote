@@ -10,8 +10,12 @@
 #include <map>
 #include <thread>
 #include <ctime>
+#ifdef WIN32
+#include "winsock2.h"
+#else
 #include <netinet/in.h>
 #include <sys/select.h>
+#endif
 
 #include "Logger.h"
 
@@ -29,8 +33,11 @@ public:
     virtual void onRecieve(const int &fd, unsigned char *data, const int &size) = 0; //makes class abstract and can't be instentiated
     virtual void onConnect(const int &fd, const struct sockaddr_in &remote) = 0;
     virtual void onClose(const int &fd, const struct sockaddr_in &remote) = 0;
+//#ifdef WIN32
+//#else
     friend void listener(NetworkHandler *);
     friend void connHandler(NetworkHandler*, const int&);
+//#endif
     bool isRunning(); //return if server up or not
     void setTimeOut(const long&);
     void setConnType(const int &c);
