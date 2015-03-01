@@ -82,7 +82,5 @@ int main(int argc, char** argv) {
     while(1);
     logger -> finalize();
     return 0;
-
-    return (0);
 }
 
