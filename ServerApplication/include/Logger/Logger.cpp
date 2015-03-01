@@ -28,96 +28,109 @@ using std::time_t;
 #include "Logger.h"
 
 
-std::ofstream Logger::out;
-bool Logger::isLogSet;
-int Logger::logLevel; //logLevel
+Logger * Logger::getInstance()
+{
+    static Logger instance; //guaranteed to be destroyed
+    return &instance;
+}
 
 inline void getDate(char *dateBuf)
 {
-	time_t t = time(0);   // get current time in seconds
-	struct tm * now = localtime( & t ); // turn time into local time
-	sprintf(dateBuf, "%d:%d:%d %d:%d:%d", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec);
+    time_t t = time(0);   // get current time in seconds
+    struct tm * now = localtime( & t ); // turn time into local time
+    sprintf(dateBuf, "%d:%d:%d %d:%d:%d", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec);
 }
 
 
 bool Logger::printInfoLog(const string log) // function for info logs
 {
-	char dateBuf[21];
-	getDate(dateBuf);
-	if(logLevel >= INFO)
-	{
-		string temp = dateBuf;
-		temp += "\tINFO\t" + log;
-		Logger::printLog(temp);
-	}
+    char dateBuf[21];
+    getDate(dateBuf);
+    if(logLevel >= INFO)
+    {
+        string temp = dateBuf;
+        temp += "\tINFO\t" + log;
+        Logger::printLog(temp);
+    }
 }
 bool Logger::printWarnLog(const string log) // function will print warn level logs
 {
-	char dateBuf[21];
-	getDate(dateBuf);
-	if(logLevel >= ERROR)
-	{
-		string temp = dateBuf;
-		temp += "\tWARNING\t" + log;
-		Logger::printLog(temp);
-	}
+    char dateBuf[21];
+    getDate(dateBuf);
+    if(logLevel >= ERROR)
+    {
+        string temp = dateBuf;
+        temp += "\tWARNING\t" + log;
+        Logger::printLog(temp);
+    }
 }
 bool Logger::printErrorLog(const string log) //function will print error level logs
 {
-	char dateBuf[21];
-	getDate(dateBuf);
-	if(logLevel >= ERROR)
-	{
-		string temp = dateBuf;
-		temp += "\tERROR\t" + log;
-		Logger::printLog(temp);
-	}
+    char dateBuf[21];
+    getDate(dateBuf);
+    if(logLevel >= ERROR)
+    {
+        string temp = dateBuf;
+        temp += "\tERROR\t" + log;
+        Logger::printLog(temp);
+    }
 }
 bool Logger::printDebugLog(const string log) //function will print debug level logs
 {
-	char dateBuf[21];
-	getDate(dateBuf);
-	if(logLevel >= DEBUG)
-	{
-		string temp = dateBuf;
-		temp += "\tDEBUG\t" + log;
-		Logger::printLog(temp);
-	}
+    char dateBuf[21];
+    getDate(dateBuf);
+    if(logLevel >= DEBUG)
+    {
+        string temp = dateBuf;
+        temp += "\tDEBUG\t" + log;
+        Logger::printLog(temp);
+    }
 }
 void Logger::setLogConfig(const string path, const string fileName, const int level, bool append)
 {
-	if(isLogSet != true)
-	{
-		isLogSet = true;
-		string temp(path);
-		temp += '/' + fileName;
-		if(append == true)
-		{
-			out.open(temp.c_str(), ofstream::out|ofstream::app);
-		}
-		else
-		{
-			out.open(temp.c_str(), ofstream::out);
-		}
-		logLevel = level;
-	}
-	else
-	{
-		printErrorLog("Can't re-set log path");
-	}
+    if(isLogSet != true)
+    {
+        isLogSet = true;
+        string temp(path);
+        temp += '/' + fileName;
+        if(append == true)
+        {
+            out.open(temp.c_str(), ofstream::out|ofstream::app);
+        }
+        else
+        {
+            out.open(temp.c_str(), ofstream::out);
+        }
+        logLevel = level;
+    }
+    else
+    {
+        printErrorLog("Can't re-set log path");
+    }
 }
 
 Logger::Logger() //it is not allowed to have an instance of this class
 {
+    isActive = true;
+}
+
+Logger::~Logger()
+{
+    if(isActive)
+    {
+        finalize();
+    }
 }
 
 bool Logger::printLog(const string &log)
 {
-	out<<log<<endl;
-	out.flush();
+    out<<log<<endl;
+    out.flush();
 }
 
 void Logger::finalize ()
 {
-	out.close();
+    isActive = false;
+    out.flush();
+    out.close();
 }
