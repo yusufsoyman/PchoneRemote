@@ -26,11 +26,11 @@ public:
 	enum log_level_t {NO_LOG = 0, INFO = 1, ERROR = 2, DEBUG = 3};
         static Logger *getInstance(); //Returns and instance pointer to logger class
         ~Logger();
-	bool printInfoLog(const std::string log); // function for info logs
-	bool printWarnLog(const std::string log); // function will print warn level logs
-	bool printErrorLog(const std::string log); //function will print error level logs
-	bool printDebugLog(const std::string log); //function will print debug level logs
-	void setLogConfig(const std::string path, const std::string fileName, const int level, bool append = true); //will configure log system to necessary settings
+	bool printInfoLog(const std::string& log); // function for info logs
+	bool printWarnLog(const std::string& log); // function will print warn level logs
+	bool printErrorLog(const std::string& log); //function will print error level logs
+	bool printDebugLog(const std::string& log); //function will print debug level logs
+	void setLogConfig(const std::string& path, const std::string& fileName, const int& level, const bool& append = true); //will configure log system to necessary settings
 	void finalize (); //closes log file
 private:
 	Logger(); //it is not allowed to have an instance of this class
