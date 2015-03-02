@@ -17,6 +17,7 @@ using std::make_pair;
 #include "Logger.h"
 #include "SoundController.h"
 #include "ServerMain.h"
+#include "ConfigReader.h"
 
 ServerMain::ServerMain()
 :inControl(false)
@@ -80,7 +81,22 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
     }
     else if(sec.second == INIT)
     {
-        //FIXME: Read config file and wait for right password
+        ConfigReader *cfReader = ConfigReader::getInstance();
+        if(strcmp(data, cfReader -> getPasswd().c_str(), size) == 0)
+        {
+            sec.second = APPRVED;
+            send(fd, (unsigned char*)APPROVE_MSG, 2);
+            sprintf(buffer, "%s - %d: Client with IP %s is approved.", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
+            logger -> printInfoLog(buffer);
+            inControl = true;
+        }
+        else
+        {
+            sprintf(buffer, "%s - %d: Client with IP %s is denied.", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
+            logger -> printWarnLog(buffer);
+            send(fd, (unsigned char*)DENY_MSG, 2);
+            closeConnection(fd);
+        }
     }
     else
     {
