@@ -4,9 +4,11 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>include/ConfigReader/ConfigReader.h</itemPath>
       <itemPath>include/Database Connections/DBAdapter.h</itemPath>
       <itemPath>include/Logger/Logger.h</itemPath>
       <itemPath>include/Network Handler/NetworkHandler.h</itemPath>
+      <itemPath>include/ServerMain/ServerMain.h</itemPath>
       <itemPath>include/SoundController/SoundController.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -19,6 +21,7 @@
       <itemPath>include/Database Connections/DBAdapter.cpp</itemPath>
       <itemPath>include/Logger/Logger.cpp</itemPath>
       <itemPath>include/Network Handler/NetworkHandler.cpp</itemPath>
+      <itemPath>include/ServerMain/ServerMain.cpp</itemPath>
       <itemPath>include/SoundController/SoundController.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -37,6 +40,12 @@
                      projectFiles="true"
                      kind="TEST">
         <itemPath>tests/networktest.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3"
+                     displayName="SoundTest"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/soundTest.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -86,6 +95,26 @@
           <output>${TESTDIR}/TestFiles/f2</output>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f3">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f3</output>
+        </linkerTool>
+      </folder>
+      <item path="include/ConfigReader/ConfigReader.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="include/Database Connections/DBAdapter.cpp"
             ex="false"
             tool="1"
@@ -110,6 +139,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="include/ServerMain/ServerMain.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="include/ServerMain/ServerMain.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/SoundController/SoundController.cpp"
             ex="false"
             tool="1"
@@ -125,6 +158,8 @@
       <item path="tests/dbtest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/networktest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/soundTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -177,6 +212,26 @@
           <output>${TESTDIR}/TestFiles/f2</output>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f3">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f3</output>
+        </linkerTool>
+      </folder>
+      <item path="include/ConfigReader/ConfigReader.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="include/Database Connections/DBAdapter.cpp"
             ex="false"
             tool="1"
@@ -201,6 +256,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="include/ServerMain/ServerMain.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="include/ServerMain/ServerMain.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/SoundController/SoundController.cpp"
             ex="false"
             tool="1"
@@ -216,6 +275,8 @@
       <item path="tests/dbtest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/networktest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/soundTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

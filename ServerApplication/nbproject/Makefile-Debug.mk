@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/include/Database\ Connections/DBAdapter.o \
 	${OBJECTDIR}/include/Logger/Logger.o \
 	${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o \
+	${OBJECTDIR}/include/ServerMain/ServerMain.o \
 	${OBJECTDIR}/include/SoundController/SoundController.o \
 	${OBJECTDIR}/main.o
 
@@ -47,7 +48,8 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 # Test Files
 TESTFILES= \
 	${TESTDIR}/TestFiles/f2 \
-	${TESTDIR}/TestFiles/f1
+	${TESTDIR}/TestFiles/f1 \
+	${TESTDIR}/TestFiles/f3
 
 # C Compiler Flags
 CFLAGS=
@@ -90,6 +92,11 @@ ${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o: include/Network\ Handler
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o include/Network\ Handler/NetworkHandler.cpp
 
+${OBJECTDIR}/include/ServerMain/ServerMain.o: include/ServerMain/ServerMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/ServerMain
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/ServerMain/ServerMain.o include/ServerMain/ServerMain.cpp
+
 ${OBJECTDIR}/include/SoundController/SoundController.o: include/SoundController/SoundController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/include/SoundController
 	${RM} "$@.d"
@@ -113,6 +120,10 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/networktest.o ${OBJECTFILES:%.o=%_noma
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} 
 
+${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/soundTest.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} 
+
 
 ${TESTDIR}/tests/dbtest.o: tests/dbtest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -124,6 +135,12 @@ ${TESTDIR}/tests/networktest.o: tests/networktest.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/networktest.o tests/networktest.cpp
+
+
+${TESTDIR}/tests/soundTest.o: tests/soundTest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/soundTest.o tests/soundTest.cpp
 
 
 .NO_PARALLEL:${OBJECTDIR}/include/Database\ Connections/DBAdapter.o
@@ -167,6 +184,19 @@ ${OBJECTDIR}/include/Network\ Handler/NetworkHandler_nomain.o: ${OBJECTDIR}/incl
 	    ${CP} ${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o ${OBJECTDIR}/include/Network\ Handler/NetworkHandler_nomain.o;\
 	fi
 
+${OBJECTDIR}/include/ServerMain/ServerMain_nomain.o: ${OBJECTDIR}/include/ServerMain/ServerMain.o include/ServerMain/ServerMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/ServerMain
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/ServerMain/ServerMain.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/ServerMain/ServerMain_nomain.o include/ServerMain/ServerMain.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/ServerMain/ServerMain.o ${OBJECTDIR}/include/ServerMain/ServerMain_nomain.o;\
+	fi
+
 ${OBJECTDIR}/include/SoundController/SoundController_nomain.o: ${OBJECTDIR}/include/SoundController/SoundController.o include/SoundController/SoundController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/include/SoundController
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/SoundController/SoundController.o`; \
@@ -199,6 +229,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	then  \
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
+	    ${TESTDIR}/TestFiles/f3 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi
