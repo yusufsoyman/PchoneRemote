@@ -3,6 +3,7 @@
  * Author: zgrw
  * This class will do all the job
  * Created on March 1, 2015, 5:52 PM
+ * Last edited on: 2015-03-02
  */
 
 #ifndef SERVERMAIN_H
@@ -15,12 +16,17 @@
 #include "Logger.h"
 #include "SoundController.h"
 
-typedef std::map< int, std::pair< sockaddr_in, bool > > CONN_HANDLE_TYPE;
-
+typedef std::map< int, std::pair< sockaddr_in, int > > CONN_HANDLE_TYPE; //it is like this: <fd, <address, state>>
+/*State
+ * 0: initial (default value)
+ * 1: Init Request recieved
+ * 2: Request approved
+*/
 class ServerMain : public NetworkHandler
 {
 public:
-    enum server_messages {ERROR_MSG = 0, HELLO_MSG = 1, INIT_MSG = 2, DENY_MSG = 3, APPROVE_MSG = 4};
+    enum fd_state {NEW = 0, INIT = 1, APPRVED = 2};
+    enum server_messages {ERROR_MSG = 0, HELLO_MSG = 1, INIT_MSG = 2, DENY_MSG = 3, APPROVE_MSG = 4, HANDSHK_REQ_MSG = 5};
     enum request_messages {MUTE_REQ = 10, INCR_REQ = 11, DECR_REQ = 12, GET_VOL_REQ = 13, PLAY_REQ = 14, STOP_REQ = 15, FWD_REQ = 16, BCKWD_REQ = 17};
     
     ServerMain();
