@@ -142,4 +142,9 @@ bool ConfigReader::createConfig()
     out<<buffer;
     out.flush();
     out.close();
+    return true;
+}
+
+std::string ConfigReader::getPasswd() {
+    return passwd;
 }
