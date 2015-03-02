@@ -32,8 +32,7 @@ ConfigReader::~ConfigReader()
 {
     logger = Logger::getInstance();
 }
-
-ConfigReader::ConfigReader(const std::string& configPath)
+/*ConfigReader::ConfigReader(const std::string& configPath)
 :configPath(configPath), port(DEFAULT_PORT)
 {
     char buffer[5];
@@ -41,7 +40,20 @@ ConfigReader::ConfigReader(const std::string& configPath)
     sprintf(buffer, "%d", pass); //always assign a default random password, just in case
     passwd = buffer;
     logger = Logger::getInstance();
+}*/
+
+
+ConfigReader& ConfigReader::getInstance()
+{
+    static ConfigReader instance;
+    return &instance;
 }
+
+void ConfigReader::setConfig(const char* configPath)
+{
+    this -> configPath = configPath;
+}
+
 
 void ConfigReader::parseConfig()
 {

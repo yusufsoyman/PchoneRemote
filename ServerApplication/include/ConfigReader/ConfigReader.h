@@ -17,8 +17,9 @@
 class ConfigReader
 {
 public:
-    ConfigReader();
-    ConfigReader(const std::string& configPath);
+    static ConfigReader * getInstance();
+    void setConfig(const char *configPath = NULL);
+    //ConfigReader(const std::string& configPath);
     virtual ~ConfigReader();
     //bool validateConfig();
     void parseConfig();
@@ -26,6 +27,7 @@ public:
     std::string getPasswd(){return passwd;}
     bool createConfig();
 private:
+    ConfigReader();
     std::string configPath;
     int port;
     std::string passwd;
