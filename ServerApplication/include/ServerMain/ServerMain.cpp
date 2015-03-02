@@ -3,6 +3,7 @@
  * Author: zgrw
  * This class will do all the job
  * Created on March 1, 2015, 5:52 PM
+ * Last edited on 2015-03-02
  */
 
 #include <utility>
@@ -33,7 +34,7 @@ void ServerMain::onClose(const int& fd, sockaddr_in& remote)
 
 void ServerMain::onConnect(const int& fd, sockaddr_in& remote)
 {
-    pair<sockaddr_in, bool> stat = make_pair(remote, false);
+    pair<sockaddr_in, bool> stat = make_pair(remote, NEW);
     pair<int, pair<sockaddr_in, bool> > conn = make_pair(fd, stat);
     connTracker.insert(conn);
     char buffer[512];
@@ -44,8 +45,8 @@ void ServerMain::onConnect(const int& fd, sockaddr_in& remote)
 void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
 {
     //CONN_HANDLE_TYPE::iterator it = connTracker.find(fd);
-    pair<sockaddr_in, bool> sec = connTracker[fd].second;
-    if(sec.second == false) //if this is a new connection
+    pair<sockaddr_in, int> &sec = connTracker[fd].second;
+    if(sec.second == NEW) //if this is a new connection
     {
         if(strncmp(data, HELLO_MSG, 2)) //if just searching for a server
         {
@@ -54,6 +55,7 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
         }
         else if(strncmp(data, INIT_MSG, 2)) //if tries to initialize a connection
         {
+            sec.second = INIT;
             if(inControl == false)
             {
                 
@@ -64,6 +66,10 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
                 closeConnection(fd);
             }
         }
+    }
+    else if(sec.second == INIT)
+    {
+        
     }
     else
     {
