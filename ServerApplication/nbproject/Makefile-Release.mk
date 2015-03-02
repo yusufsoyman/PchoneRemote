@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/include/ConfigReader/ConfigReader.o \
 	${OBJECTDIR}/include/Database\ Connections/DBAdapter.o \
 	${OBJECTDIR}/include/Logger/Logger.o \
 	${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o \
@@ -74,6 +75,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/serverapplication: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/serverapplication ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/include/ConfigReader/ConfigReader.o: include/ConfigReader/ConfigReader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/ConfigReader
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/ConfigReader/ConfigReader.o include/ConfigReader/ConfigReader.cpp
 
 .NO_PARALLEL:${OBJECTDIR}/include/Database\ Connections/DBAdapter.o
 ${OBJECTDIR}/include/Database\ Connections/DBAdapter.o: include/Database\ Connections/DBAdapter.cpp 
@@ -142,6 +148,19 @@ ${TESTDIR}/tests/soundTest.o: tests/soundTest.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/soundTest.o tests/soundTest.cpp
 
+
+${OBJECTDIR}/include/ConfigReader/ConfigReader_nomain.o: ${OBJECTDIR}/include/ConfigReader/ConfigReader.o include/ConfigReader/ConfigReader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/ConfigReader
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/ConfigReader/ConfigReader.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/ConfigReader/ConfigReader_nomain.o include/ConfigReader/ConfigReader.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/ConfigReader/ConfigReader.o ${OBJECTDIR}/include/ConfigReader/ConfigReader_nomain.o;\
+	fi
 
 .NO_PARALLEL:${OBJECTDIR}/include/Database\ Connections/DBAdapter.o
 ${OBJECTDIR}/include/Database\ Connections/DBAdapter_nomain.o: ${OBJECTDIR}/include/Database\ Connections/DBAdapter.o include/Database\ Connections/DBAdapter.cpp 

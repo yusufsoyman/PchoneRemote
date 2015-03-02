@@ -18,6 +18,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>include/ConfigReader/ConfigReader.cpp</itemPath>
       <itemPath>include/Database Connections/DBAdapter.cpp</itemPath>
       <itemPath>include/Logger/Logger.cpp</itemPath>
       <itemPath>include/Network Handler/NetworkHandler.cpp</itemPath>
@@ -110,6 +111,11 @@
           <output>${TESTDIR}/TestFiles/f3</output>
         </linkerTool>
       </folder>
+      <item path="include/ConfigReader/ConfigReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="include/ConfigReader/ConfigReader.h"
             ex="false"
             tool="3"
@@ -227,6 +233,11 @@
           <output>${TESTDIR}/TestFiles/f3</output>
         </linkerTool>
       </folder>
+      <item path="include/ConfigReader/ConfigReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="include/ConfigReader/ConfigReader.h"
             ex="false"
             tool="3"
