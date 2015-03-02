@@ -9,6 +9,7 @@
 #define	CONFIGREADER_H
 
 #include <string>
+#include "Logger.h"
 //#include "rapidxml.hpp"
 
 #define DEFAULT_PORT 63783
@@ -19,7 +20,7 @@ public:
     ConfigReader();
     ConfigReader(const std::string& configPath);
     virtual ~ConfigReader();
-    bool validateConfig();
+    //bool validateConfig();
     void parseConfig();
     int getPort() {return port;}
     std::string getPasswd(){return passwd;}
@@ -28,6 +29,7 @@ private:
     std::string configPath;
     int port;
     std::string passwd;
+    Logger *logger;
 };
 
 #endif	/* CONFIGREADER_H */
