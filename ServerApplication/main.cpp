@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     signal(SIGTERM, sigHandler);
     signal(SIGINT, sigHandler);
     logger = Logger::getInstance();
-    logger -> setLogConfig("./","pchoneremote.log", Logger::INFO, true);
+    logger -> setLogConfig("./","pchoneremote.log", Logger::ERROR, true);
     ConfigReader *cfReader = ConfigReader::getInstance();
     if(argc > 1)
     {
