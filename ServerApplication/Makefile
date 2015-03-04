@@ -9,12 +9,14 @@ RM=rm
 BINS=pchoneremote
 
 
-# clean
-clean:
-#$(RM) $(LIBS) $(BINS)
-
 # all
 all: libraries binaries
+
+# clean
+clean:
+$(RM) $(BINS) libznetwork.so libzsound.so libzdbconnector.so libzconfig.so libzserver.so libzlogger.so
+
+
 
 libraries:
 	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ ./include/Logger/Logger.cpp -o libzlogger.so
