@@ -83,9 +83,9 @@ void ConfigReader::parseConfig()
         }
         catch (exception &e) //
         {
-            createConfig();
-            sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath.c_str());
+            sprintf(buffer, "%s - %d: Can't parse config file %s, might be corrupted\n\t\t\t\tRewriting it with default configuration\n\t\t\t\tError message: %s", __FILE__, __LINE__, configPath.c_str(), e.what());
             logger -> printErrorLog(buffer);
+            createConfig();
             invalid = true;
         }
         if(!invalid)
