@@ -10,6 +10,18 @@
 #include <cstdio>
 #include <cstring>
 
+#ifdef WIN32
+#include "winsock2.h"
+#else
+#include <sys/socket.h> //for sockek operations
+#include <netinet/in.h> //sockaddr_in members
+#include <sys/select.h>
+#include <arpa/inet.h> //for inet_ntoa function
+#include <unistd.h> //for close
+//#include <sys/types.h> // older OS's might require this header too. If can't compile, uncomment this line
+#endif
+
+
 using std::pair;
 using std::make_pair;
 
@@ -25,7 +37,7 @@ ServerMain::ServerMain()
     logger = Logger::getInstance();
 }
 
-void ServerMain::onClose(const int& fd, sockaddr_in& remote)
+void ServerMain::onClose(const int &fd, const struct sockaddr_in &remote)
 {
     connTracker.erase(fd); //FIXME: need to check if this guy was in charge or not
     char buffer[512];
@@ -33,7 +45,7 @@ void ServerMain::onClose(const int& fd, sockaddr_in& remote)
     logger -> printDebugLog(buffer);
 }
 
-void ServerMain::onConnect(const int& fd, sockaddr_in& remote)
+void ServerMain::onConnect(const int &fd, const struct sockaddr_in &remote)
 {
     pair<sockaddr_in, bool> stat = make_pair(remote, NEW);
     pair<int, pair<sockaddr_in, bool> > conn = make_pair(fd, stat);
@@ -43,14 +55,14 @@ void ServerMain::onConnect(const int& fd, sockaddr_in& remote)
     logger -> printDebugLog(buffer);
 }
 
-void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
+void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
 {
     char buffer[512];
     //CONN_HANDLE_TYPE::iterator it = connTracker.find(fd);
-    pair<sockaddr_in, int> &sec = connTracker[fd].second;
+    pair<sockaddr_in, int> &sec = connTracker[fd];
     if(sec.second == NEW) //if this is a new connection
     {
-        if(strncmp(data, HELLO_MSG, size)) //if just searching for a server
+        if(strncmp((char*)data, (char *)HELLO_MSG, size)) //if just searching for a server
         {
             sprintf(buffer, "%s - %d: %s said \"HELLO\"", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
             logger -> printDebugLog(buffer);
@@ -59,7 +71,7 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
             logger -> printDebugLog(buffer);
             closeConnection(fd);
         }
-        else if(strncmp(data, INIT_MSG, size)) //if tries to initialize a connection
+        else if(strncmp((char*)data, (char*)INIT_MSG, size)) //if tries to initialize a connection
         {
             sec.second = INIT;
             sprintf(buffer, "%s - %d: Initialization request from IP %s", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
@@ -82,7 +94,7 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
     else if(sec.second == INIT)
     {
         ConfigReader *cfReader = ConfigReader::getInstance();
-        if(strcmp(data, cfReader -> getPasswd().c_str(), size) == 0)
+        if(strncmp((char*)data, cfReader -> getPasswd().c_str(), size) == 0)
         {
             sec.second = APPRVED;
             send(fd, (unsigned char*)APPROVE_MSG, 2);
@@ -144,8 +156,11 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
                 }
                 break;
             case GET_VOL_REQ:
+            {
                 float vol = sc.getCurrentVolumeLevel();
                 send(fd, (unsigned char*)OK_MSG, 2);
+                send(fd, (unsigned char*)&vol, 2);
+            }
                 break;
             /*case SET_VOL_REQ: // no need
                 sec.second = WAIT_DATA; //waiting for data
