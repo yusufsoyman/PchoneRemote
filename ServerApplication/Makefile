@@ -14,7 +14,7 @@ all: libraries binaries
 
 # clean
 clean:
-$(RM) $(BINS) libznetwork.so libzsound.so libzdbconnector.so libzconfig.so libzserver.so libzlogger.so
+	$(RM) $(BINS) libznetwork.so libzsound.so libzdbconnector.so libzconfig.so libzserver.so libzlogger.so
 
 
 
