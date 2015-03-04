@@ -27,11 +27,11 @@ ConfigReader::ConfigReader()
     int pass = rand() % 9000 + 1000;
     sprintf(buffer, "%d", pass);
     passwd = buffer;
+    logger = Logger::getInstance();
 }
 
 ConfigReader::~ConfigReader()
 {
-    logger = Logger::getInstance();
 }
 /*ConfigReader::ConfigReader(const std::string& configPath)
 :configPath(configPath), port(DEFAULT_PORT)
@@ -83,9 +83,9 @@ void ConfigReader::parseConfig()
         }
         catch (exception &e) //
         {
-            createConfig();
-            sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath.c_str());
+            sprintf(buffer, "%s - %d: Can't parse config file %s, might be corrupted\n\t\t\t\tRewriting it with default configuration\n\t\t\t\tError message: %s", __FILE__, __LINE__, configPath.c_str(), e.what());
             logger -> printErrorLog(buffer);
+            createConfig();
             invalid = true;
         }
         if(!invalid)

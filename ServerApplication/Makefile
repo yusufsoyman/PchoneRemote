@@ -30,3 +30,6 @@ libraries:
 
 binaries:
 	$(CXX) $(CFLAGS) main.cpp -L./ -I./include/Logger/ -I./include/SoundController/ -I./include/Network\ Handler/ -I./include/Database\ Connections/ -I./include/ConfigReader/ -I./include/ServerMain/ -lzlogger -lzsound -lznetwork -lzdbconnector -lzserver -lzconfig -o $(BINS)
+	
+uninstall:
+	$(RM) *log *cfg
