@@ -147,10 +147,10 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
                 float vol = sc.getCurrentVolumeLevel();
                 send(fd, (unsigned char*)OK_MSG, 2);
                 break;
-            case SET_VOL_REQ:
+            /*case SET_VOL_REQ: // no need
                 sec.second = WAIT_DATA; //waiting for data
                 send(fd, (unsigned char*)OK_MSG, 2);
-                break;
+                break;*/
             case PLAY_REQ:
                 /*if(rVal == false)
                 {
@@ -188,6 +188,6 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
     }
     else
     {
-        
+        //Currently not waiting for any data but reserved for this purpose
     }
 }
