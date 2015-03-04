@@ -34,6 +34,7 @@ public:
     virtual void onRecieve(const int &fd, unsigned char *data, const int &size);
     virtual void onConnect(const int &fd, const struct sockaddr_in &remote);
     virtual void onClose(const int &fd, const struct sockaddr_in &remote);
+    void startSever() { while(isRunning()); } //infinite loop
     //bool sendResponse(const int &fd, const void *data, const int &size);
 private:
     Logger *logger;
