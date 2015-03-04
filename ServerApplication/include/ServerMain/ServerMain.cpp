@@ -98,31 +98,96 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
             closeConnection(fd);
         }
     }
-    else
+    else if (sec.second = APPRVED)
     {
         int input = static_cast<int>(*data);
+        bool rVal;
         switch(input)
         {
             case MUTE_REQ:
+                rVal = sc.muteUnmute();
+                if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                    send(fd, (unsigned char*)ERROR_MSG, 2);
+                }
+                else
+                {
+                    send(fd, (unsigned char*)OK_MSG, 2);
+                }
                 break;
             case INCR_REQ:
+                rVal = sc.increaseVolume();
+                if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                    send(fd, (unsigned char*)ERROR_MSG, 2);
+                }
+                else
+                {
+                    send(fd, (unsigned char*)OK_MSG, 2);
+                }
                 break;
             case DECR_REQ:
+                rVal = sc.decreaseVolume();
+                if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                    send(fd, (unsigned char*)ERROR_MSG, 2);
+                }
+                else
+                {
+                    send(fd, (unsigned char*)OK_MSG, 2);
+                }
                 break;
             case GET_VOL_REQ:
+                float vol = sc.getCurrentVolumeLevel();
+                send(fd, (unsigned char*)OK_MSG, 2);
+                break;
+            case SET_VOL_REQ:
+                sec.second = WAIT_DATA; //waiting for data
+                send(fd, (unsigned char*)OK_MSG, 2);
                 break;
             case PLAY_REQ:
+                /*if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                }*/
                 break;
             case STOP_REQ:
+                /*if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                }*/
                 break;
             case FWD_REQ:
+                /*if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                }*/
                 break;
             case BCKWD_REQ:
+                /*if(rVal == false)
+                {
+                    sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
+                    logger -> printErrorLog(buffer);
+                }*/
                 break;
             default:
                 sprintf(buffer, "%s - %d: Undefined request received.", __FILE__, __LINE__);
                 logger -> printWarnLog(buffer);
+                send(fd, (unsigned char*)DENY_MSG, 2);
                 break;
         }
+    }
+    else
+    {
+        
     }
 }
