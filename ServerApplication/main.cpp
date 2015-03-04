@@ -39,12 +39,13 @@ int main(int argc, char** argv)
     signal(SIGTERM, sigHandler);
     signal(SIGINT, sigHandler);
     logger = Logger::getInstance();
-    logger -> setLogConfig("./","test.log", Logger::INFO, true);
+    logger -> setLogConfig("./","pchoneremote.log", Logger::INFO, true);
     ConfigReader *cfReader = ConfigReader::getInstance();
     if(argc > 1)
     {
         cfReader -> setConfig(argv[1]);
     }
+    cfReader -> parseConfig();
     int port = cfReader->getPort();
     
     server.listen(port, 10); // don't need many clients. Only a few is enough
