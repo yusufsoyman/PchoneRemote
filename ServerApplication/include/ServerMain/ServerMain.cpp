@@ -100,6 +100,29 @@ void ServerMain::onRecieve(const int& fd, unsigned char* data, const int& size)
     }
     else
     {
-        
+        int input = static_cast<int>(*data);
+        switch(input)
+        {
+            case MUTE_REQ:
+                break;
+            case INCR_REQ:
+                break;
+            case DECR_REQ:
+                break;
+            case GET_VOL_REQ:
+                break;
+            case PLAY_REQ:
+                break;
+            case STOP_REQ:
+                break;
+            case FWD_REQ:
+                break;
+            case BCKWD_REQ:
+                break;
+            default:
+                sprintf(buffer, "%s - %d: Undefined request received.", __FILE__, __LINE__);
+                logger -> printWarnLog(buffer);
+                break;
+        }
     }
 }
