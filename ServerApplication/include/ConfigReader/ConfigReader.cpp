@@ -27,11 +27,11 @@ ConfigReader::ConfigReader()
     int pass = rand() % 9000 + 1000;
     sprintf(buffer, "%d", pass);
     passwd = buffer;
+    logger = Logger::getInstance();
 }
 
 ConfigReader::~ConfigReader()
 {
-    logger = Logger::getInstance();
 }
 /*ConfigReader::ConfigReader(const std::string& configPath)
 :configPath(configPath), port(DEFAULT_PORT)
