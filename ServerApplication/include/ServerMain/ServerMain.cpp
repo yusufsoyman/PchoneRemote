@@ -37,6 +37,11 @@ ServerMain::ServerMain()
     logger = Logger::getInstance();
 }
 
+ServerMain::~ServerMain()
+{
+    
+}
+
 void ServerMain::onClose(const int &fd, const struct sockaddr_in &remote)
 {
     connTracker.erase(fd); //FIXME: need to check if this guy was in charge or not
