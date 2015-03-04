@@ -137,7 +137,7 @@ void ConfigReader::parseConfig()
 bool ConfigReader::createConfig()
 {
     char buffer[1024];
-    sprintf(buffer,"<pchone><port>%d</port><passwd>%s</passwd></pchone>", port, passwd.c_str());
+    sprintf(buffer,"<pchone>\n\t<port>%d</port>\n\t<passwd>%s</passwd>\n</pchone>", port, passwd.c_str());
     ofstream out(configPath, ios::out);
     out<<buffer;
     out.flush();
