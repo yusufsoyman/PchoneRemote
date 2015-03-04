@@ -3,6 +3,7 @@
  * Author: zgrw
  *
  * Created on Feb 24, 2015, 8:21:33 PM
+ * Last edited by: Ozgur Pekcagliyan - 2015-03-01
  */
 
 #include <arpa/inet.h> //for inet_ntoa function
@@ -81,7 +82,5 @@ int main(int argc, char** argv) {
     while(1);
     logger -> finalize();
     return 0;
-
-    return (0);
 }
 

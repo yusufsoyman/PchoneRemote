@@ -2,7 +2,7 @@
  * Logger.cpp
  * Main Class to manage Logging operations
  * Created by: Ozgur Pekcagliyan - 2014-09-28 08:19:56 PM EEST
- * Last edited by: Ozgur Pekcagliyan - 2014-10-25 11:02:03 PM EEST
+ * Last edited by: Ozgur Pekcagliyan - 2015-03-01
  * Notes:
  * logLevel will be used to define level of verbosing
  * * Potential error codes are;
@@ -42,7 +42,7 @@ inline void getDate(char *dateBuf)
 }
 
 
-bool Logger::printInfoLog(const string log) // function for info logs
+bool Logger::printInfoLog(const string& log) // function for info logs
 {
     char dateBuf[21];
     getDate(dateBuf);
@@ -53,7 +53,7 @@ bool Logger::printInfoLog(const string log) // function for info logs
         Logger::printLog(temp);
     }
 }
-bool Logger::printWarnLog(const string log) // function will print warn level logs
+bool Logger::printWarnLog(const string& log) // function will print warn level logs
 {
     char dateBuf[21];
     getDate(dateBuf);
@@ -64,7 +64,7 @@ bool Logger::printWarnLog(const string log) // function will print warn level lo
         Logger::printLog(temp);
     }
 }
-bool Logger::printErrorLog(const string log) //function will print error level logs
+bool Logger::printErrorLog(const string& log) //function will print error level logs
 {
     char dateBuf[21];
     getDate(dateBuf);
@@ -75,7 +75,7 @@ bool Logger::printErrorLog(const string log) //function will print error level l
         Logger::printLog(temp);
     }
 }
-bool Logger::printDebugLog(const string log) //function will print debug level logs
+bool Logger::printDebugLog(const string& log) //function will print debug level logs
 {
     char dateBuf[21];
     getDate(dateBuf);
@@ -86,7 +86,13 @@ bool Logger::printDebugLog(const string log) //function will print debug level l
         Logger::printLog(temp);
     }
 }
-void Logger::setLogConfig(const string path, const string fileName, const int level, bool append)
+
+void Logger::changeLogLevel(const int &newLevel)
+{
+    logLevel = newLevel;
+}
+
+void Logger::setLogConfig(const string& path, const string& fileName, const int& level, const bool& append)
 {
     if(isLogSet != true)
     {
