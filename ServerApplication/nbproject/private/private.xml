@@ -17,6 +17,8 @@
             <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/Makefile</file>
             <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/include/Logger/Logger.cpp</file>
             <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/include/Logger/Logger.h</file>
+            <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/include/ConfigReader/ConfigReader.h</file>
+            <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/include/ConfigReader/ConfigReader.cpp</file>
             <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/include/SoundController/SoundController.cpp</file>
             <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/include/Database%20Connections/DBAdapter.h</file>
             <file>file:/home/zgrw/NetBeansProjects/PchoneRemote/ServerApplication/tests/soundTest.cpp</file>

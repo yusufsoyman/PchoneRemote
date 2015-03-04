@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o \
 	${OBJECTDIR}/include/ServerMain/ServerMain.o \
 	${OBJECTDIR}/include/SoundController/SoundController.o \
+	${OBJECTDIR}/include/XmlParser/XmlParser.o \
 	${OBJECTDIR}/main.o
 
 # Test Directory
@@ -107,6 +108,11 @@ ${OBJECTDIR}/include/SoundController/SoundController.o: include/SoundController/
 	${MKDIR} -p ${OBJECTDIR}/include/SoundController
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/SoundController/SoundController.o include/SoundController/SoundController.cpp
+
+${OBJECTDIR}/include/XmlParser/XmlParser.o: include/XmlParser/XmlParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/XmlParser
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/XmlParser/XmlParser.o include/XmlParser/XmlParser.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -227,6 +233,19 @@ ${OBJECTDIR}/include/SoundController/SoundController_nomain.o: ${OBJECTDIR}/incl
 	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/SoundController/SoundController_nomain.o include/SoundController/SoundController.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/include/SoundController/SoundController.o ${OBJECTDIR}/include/SoundController/SoundController_nomain.o;\
+	fi
+
+${OBJECTDIR}/include/XmlParser/XmlParser_nomain.o: ${OBJECTDIR}/include/XmlParser/XmlParser.o include/XmlParser/XmlParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/XmlParser
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/XmlParser/XmlParser.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/XmlParser/XmlParser_nomain.o include/XmlParser/XmlParser.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/XmlParser/XmlParser.o ${OBJECTDIR}/include/XmlParser/XmlParser_nomain.o;\
 	fi
 
 ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 
