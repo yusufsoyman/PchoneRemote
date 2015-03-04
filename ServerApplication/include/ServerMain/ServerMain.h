@@ -25,7 +25,7 @@ typedef std::map< int, std::pair< sockaddr_in, int > > CONN_HANDLE_TYPE; //it is
 class ServerMain : public NetworkHandler
 {
 public:
-    enum fd_state {NEW = 0, INIT = 1, APPRVED = 2};
+    enum fd_state {NEW = 0, INIT = 1, APPRVED = 2, WAIT_DATA = 3};
     enum server_messages {ERROR_MSG = 0, HELLO_MSG = 1, INIT_MSG = 2, DENY_MSG = 3, APPROVE_MSG = 4, HANDSHK_REQ_MSG = 5, OK_MSG = 6};
     enum request_messages {MUTE_REQ = 10, INCR_REQ = 11, DECR_REQ = 12, GET_VOL_REQ = 13, SET_VOL_REQ = 14, PLAY_REQ = 15, STOP_REQ = 16, FWD_REQ = 17, BCKWD_REQ = 18};
     
