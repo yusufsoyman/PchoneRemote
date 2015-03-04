@@ -15,6 +15,7 @@
 
 using std::string;
 using std::ifstream;
+using std::ofstream;
 using std::exception;
 using std::ios;
 using namespace rapidxml;
@@ -43,7 +44,7 @@ ConfigReader::~ConfigReader()
 }*/
 
 
-ConfigReader& ConfigReader::getInstance()
+ConfigReader* ConfigReader::getInstance()
 {
     static ConfigReader instance;
     return &instance;
@@ -64,26 +65,26 @@ void ConfigReader::parseConfig()
     in.seekg(0, ios::beg);
     if(size <= 0)
     {
-        sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath);
+        sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath.c_str());
         logger -> printErrorLog(buffer);
         in.close();
         createConfig();
     }
     else
     {
-        string data;
+        char data[256];
         bool invalid = false;
         in.read(data, size);
         xml_document<> conf;
         in.close();
         try
         {
-            conf.parse(const_cast<char*>(data.c_str()));
+            conf.parse<0>(data);
         }
         catch (exception &e) //
         {
             createConfig();
-            sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath);
+            sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath.c_str());
             logger -> printErrorLog(buffer);
             invalid = true;
         }
@@ -92,7 +93,7 @@ void ConfigReader::parseConfig()
             xml_node<>* head = conf.first_node("pchone");
             if(head == NULL)
             {
-                sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath);
+                sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath.c_str());
                 logger -> printErrorLog(buffer);
                 createConfig();
             }
@@ -103,24 +104,24 @@ void ConfigReader::parseConfig()
                 while(childeren != NULL)
                 {
                     ++c;
-                    if(strcmp(childeren->name(), "port", 4))
+                    if(strncmp(childeren->name(), "port", 4))
                     {
                         port = atoi(childeren->value());
                     }
-                    else if(strcmp(childeren->name(), "passwd", 4))
+                    else if(strncmp(childeren->name(), "passwd", 4))
                     {
                         passwd = childeren->value();
                     }
                     else
                     {
-                        sprintf(buffer, "%s - %d: Unrecognized config %s in config file %s.", __FILE__, __LINE__, childeren->name(), configPath);
+                        sprintf(buffer, "%s - %d: Unrecognized config %s in config file %s.", __FILE__, __LINE__, childeren->name(), configPath.c_str());
                         logger -> printWarnLog(buffer);
                     }
                     childeren = childeren -> next_sibling();
                 }
                 if(c == 0)
                 {
-                    sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath);
+                    sprintf(buffer, "%s - %d: Config file %s is corrupted\n\t\t\t\tRewriting it with default configuration.", __FILE__, __LINE__, configPath.c_str());
                     logger -> printErrorLog(buffer);
                     createConfig();
                 }
@@ -145,6 +146,6 @@ bool ConfigReader::createConfig()
     return true;
 }
 
-std::string ConfigReader::getPasswd() {
+const string & ConfigReader::getPasswd() {
     return passwd;
 }
