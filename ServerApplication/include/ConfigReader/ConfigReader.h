@@ -24,7 +24,6 @@ public:
     //bool validateConfig();
     void parseConfig();
     int getPort() {return port;}
-    std::string getPasswd();
     bool createConfig();
     const std::string & getPasswd();
 private:
