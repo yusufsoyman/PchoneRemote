@@ -2,9 +2,9 @@
  * XmlParser.h
  * Main Class to manage XML operations
  * Created by: Ozgur Pekcagliyan - 2014-10-04 01:17:32 PM EEST
- * Last edited by: 
- * Notes: Ozgur Pekcagliyan - 2014-10-16
- * FIXME:This implementation always expexts a tree hierarchy, there should be always 2 head nodes but it should be flexible to accept multiple trees.
+ * Last edited by: Ozgur Pekcagliyan - 2015-03-07
+ * Notes: 
+ * FIXME:This implementation always expects a tree hierarchy, there should be always 2 head nodes but it should be flexible to accept multiple trees.
 */
 
 #ifndef XMLPARSER_H
@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include "Logger.h"
 // #include <map> //this might be used to build a tree
 
 
@@ -57,6 +58,8 @@ namespace XmlSpace
 		std::vector<XmlNode *> head;
 		std::stack<XmlNode *> currNode; //will hold the next node in tree at the top of stack in order to be able to search
 		int nodePtr; //will hold ptr value for head vector;
+                
+                Logger *logger;
 	};
 
 }
