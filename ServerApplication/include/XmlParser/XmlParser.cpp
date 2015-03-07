@@ -116,7 +116,7 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
             logger -> printDebugLog("Calling attribute finder");
             attributeFinder(tempToken, nodeStack, nodePtr, posSpace);
             //Lets find its value and clear tags ;)
-            logger -> printDebugLog("Clearing tages to find its entire node value");
+            logger -> printDebugLog("Clearing tags to find its entire node value");
             XmlNode *node = nodeStack.top();
             node -> nodeName = nodeName; //fixing nodeName
             string endNode = "</";
@@ -145,7 +145,7 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
             else // <asd>
             {
                 logger -> printDebugLog("Found a new node");
-                logger -> printDebugLog("Clearing tages to find its entire node value");
+                logger -> printDebugLog("Clearing tags to find its entire node value");
                 posBeg = tempToken.find("<");
                 string nodeName = tempToken.substr(posBeg + 1, string::npos); //0th element should be <
                 string endNode = "</";
