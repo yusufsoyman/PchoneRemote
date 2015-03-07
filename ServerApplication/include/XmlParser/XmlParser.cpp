@@ -195,6 +195,7 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
         logger -> printErrorLog("Invalid XML data!");
         //Oh no we have an invalid XML and couldn't complete XML
     }
+    delete nodeStack;
 }
 
 void XmlParser::attributeFinder(string tempToken, stack<XmlNode *> &nodeStack, int &nodePtr, size_t &posSpace, string delim)
@@ -274,7 +275,7 @@ void XmlParser::attributeFinder(string tempToken, stack<XmlNode *> &nodeStack, i
 
 XmlNode * XmlParser::createNode (const string &nodeName, int nodePtr, const string nodeVal)
 {
-    logger -> printDebugLog("Strated creating a new node");
+    logger -> printDebugLog("Started creating a new node");
     XmlNode *newNode = new XmlNode(); // TODO: This should be deleted by destructor/
     newNode -> nodeName = nodeName;
     newNode -> nodeVal = nodeVal;
@@ -483,7 +484,7 @@ bool XmlParser::findNode (const string &nodeName) // This is the function which 
 
 bool XmlParser::findNode (XmlNode *head, const string &nodeName) //This is the real traverse function and every other function will call it
 {
-    //FIXME: Add an algorithm to keep searching from begining until reaches to start point
+    //FIXME: Add an algorithm to keep searching from beginning until reaches to start point
     logger -> printDebugLog("Started main node finding function...");
     static int nodePtr = 0;
     XmlNode *sNode = currNode.top();
