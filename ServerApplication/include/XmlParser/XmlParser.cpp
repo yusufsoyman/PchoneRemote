@@ -94,11 +94,17 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
             {
                 logger -> printDebugLog("There are spaces inside the node, this generally means attributes, calling attribute finder");
                 nodeName = tempSlashToken.substr(0, posSpace);
+                char buffer[256];
+                sprintf(buffer, "Name of the node: %s", nodeName.c_str());
+                logger -> printDebugLog(buffer);
                 attributeFinder(tempSlashToken, nodeStack, nodePtr, posSpace, "/"); //this deletes first < char
             }
             else
             {
                 nodeName = tempSlashToken.substr(1, tempSlashToken.size() - 2); // -2 because of />
+                char buffer[256];
+                sprintf(buffer, "Name of the node: %s", nodeName.c_str());
+                logger -> printDebugLog(buffer);
                 XmlNode *temp = createNode(nodeName, nodePtr);
                 nodeStack.top() -> subNodes.push_back(temp);
                 logger -> printDebugLog("Node as added as a child node to the top node in stack");
@@ -112,6 +118,9 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
             logger -> printDebugLog("Found a node which includes attributes");
             posBeg = tempToken.find("<");
             string nodeName = tempToken.substr(posBeg + 1, posSpace - posBeg - 1);
+            char buffer[256];
+            sprintf(buffer, "Name of the node: %s", nodeName.c_str());
+            logger -> printDebugLog(buffer);
             size_t tempPos = posSpace - posBeg;
             logger -> printDebugLog("Calling attribute finder");
             attributeFinder(tempToken, nodeStack, nodePtr, posSpace);
@@ -148,6 +157,9 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
                 logger -> printDebugLog("Clearing tags to find its entire node value");
                 posBeg = tempToken.find("<");
                 string nodeName = tempToken.substr(posBeg + 1, string::npos); //0th element should be <
+                char buffer[256];
+                sprintf(buffer, "Name of the node: %s", nodeName.c_str());
+                logger -> printDebugLog(buffer);
                 string endNode = "</";
                 endNode += nodeName + ">";
                 if((posSpace = tempStr.find(endNode.c_str())) == string::npos)//like <body>.....................</body>
@@ -328,7 +340,7 @@ XmlParser::~XmlParser()
 void XmlParser::deleteAll(XmlNode *node)
 {
     static int nodePtr = 0;
-    string log = "Strated destroyin all nodes with current tree ";
+    string log = "Strated destroying all nodes with current tree ";
     log += nodePtr;
     logger -> printDebugLog(log);
     static stack<XmlNode *> nodeStack;
@@ -341,7 +353,7 @@ void XmlParser::deleteAll(XmlNode *node)
         int attrSize = node -> attributes.size();
         int subNodesize = node -> subNodes.size();
         int i;
-        logger -> printDebugLog("Strated destroyin all attributes");
+        logger -> printDebugLog("Strated destroying all attributes");
         for( i = attrSize - 1; i >= 0; --i)
         {
             delete node -> attributes[i];
