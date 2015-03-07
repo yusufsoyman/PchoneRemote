@@ -195,7 +195,6 @@ void XmlParser::vectorizeString (const string &str) // This will tokenize a stri
         logger -> printErrorLog("Invalid XML data!");
         //Oh no we have an invalid XML and couldn't complete XML
     }
-    delete nodeStack;
 }
 
 void XmlParser::attributeFinder(string tempToken, stack<XmlNode *> &nodeStack, int &nodePtr, size_t &posSpace, string delim)
