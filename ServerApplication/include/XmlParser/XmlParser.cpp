@@ -487,17 +487,17 @@ bool XmlParser::findNode (XmlNode *head, const string &nodeName) //This is the r
     logger -> printDebugLog("Started main node finding function...");
     static int nodePtr = 0;
     XmlNode *sNode = currNode.top();
-    if(this -> head.size() > nodePtr)
-    {
+    //if(this -> head.size() > nodePtr)
+    //{
         if(head == NULL)
         {
             currNode.pop();
             if(currNode.empty() == true && this -> head.size() > nodePtr)
             {
                 logger -> printDebugLog("Jumping next tree");
-                currNode.push(this -> head[++nodePtr]);
+                currNode.push(this -> head[nodePtr++]);
             }
-            else if(this -> head.size() <= nodePtr)
+            else if(this -> head.size() < nodePtr)
             {
                 return false;
             }
@@ -524,10 +524,10 @@ bool XmlParser::findNode (XmlNode *head, const string &nodeName) //This is the r
             if(head != sNode)
             {
                 currNode.push(head);
-                if(findNode(head -> subNodes[i], nodeName) == true) //found it don't search any more
-                {
-                    return true;
-                }
+            }
+            if(findNode(head -> subNodes[i], nodeName) == true) //found it don't search any more
+            {
+                return true;
             }
         }
         logger -> printDebugLog("Completed looking to sub nodes, will try next tree");
@@ -539,7 +539,7 @@ bool XmlParser::findNode (XmlNode *head, const string &nodeName) //This is the r
                 return true;
             }
         }
-    }
+    //}
     logger -> printDebugLog("Node can not be found");
     //else
     //{
