@@ -6,6 +6,7 @@ CC=g++
 CFLAGS=-std=c++11
 LDFLAGS=-shared -fPIC
 RM=rm
+CP=cp
 BINS=pchoneremote
 
 
@@ -22,14 +23,18 @@ libraries:
 	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ ./include/Logger/Logger.cpp -o libzlogger.so
 	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/Network\ Handler/ ./include/Network\ Handler/NetworkHandler.cpp -L./ -o libznetwork.so -lzlogger -lpthread
 	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/SoundController/ ./include/SoundController/SoundController.cpp -L./ -o libzsound.so -lzlogger -lasound
-	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/Database\ Connections/ ./include/Database\ Connections/DBAdapter.cpp -L./ -o libzdbconnector.so -lmysqlclient -lsqlite3 -lzlogger
-	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/ConfigReader/ ./include/ConfigReader/ConfigReader.cpp  -L./ -o libzconfig.so -lzlogger
-	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/ConfigReader/ -I./include/ServerMain/ -I./include/Network\ Handler/ -I./include/SoundController/ ./include/ServerMain/ServerMain.cpp -L./ -o libzserver.so -lzlogger -lznetwork -lzsound
+	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/XmlParser/ ./include/XmlParser/XmlParser.cpp -L./ -lzlogger -o libzxmlparser.so
+	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/ConfigReader/ -I./include/XmlParser/ ./include/ConfigReader/ConfigReader.cpp  -L./ -o libzconfig.so -lzlogger -lzxmlparser
+	$(CXX) $(LDFLAGS) $(CFLAGS) -I./include/Logger/ -I./include/ConfigReader/ -I./include/ServerMain/ -I./include/Network\ Handler/ -I./include/SoundController/ ./include/ServerMain/ServerMain.cpp -L./ -o libzserver.so -lzlogger -lznetwork -lzsound -lzxmlparser
 
 
 
 binaries:
-	$(CXX) $(CFLAGS) main.cpp -L./ -I./include/Logger/ -I./include/SoundController/ -I./include/Network\ Handler/ -I./include/Database\ Connections/ -I./include/ConfigReader/ -I./include/ServerMain/ -lzlogger -lzsound -lznetwork -lzdbconnector -lzserver -lzconfig -o $(BINS)
+	$(CXX) $(CFLAGS) main.cpp -L./ -I./include/Logger/ -I./include/SoundController/ -I./include/Network\ Handler/ -I./include/Database\ Connections/ -I./include/ConfigReader/ -I./include/ServerMain/ -lzlogger -lzsound -lznetwork -lzserver -lzconfig -lzxmlparser -o $(BINS)
+	
+install:
+	$(CP) *so /usr/lib/
+	$(CP) $(BINS) /usr/bin
 	
 uninstall:
-	$(RM) *log *cfg
+	$(RM) /usr/bin/$(BINS) /usr/lib/libznetwork.so /usr/lib/libzserver.so /usr/lib/libzconfig.so /usr/lib/libzxmlparser.so /usr/lib/libzsound.so /usr/lib/libzlogger.so

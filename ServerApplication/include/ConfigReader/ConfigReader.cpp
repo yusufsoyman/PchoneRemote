@@ -3,13 +3,15 @@
  * Author: zgrw
  *
  * Created on March 2, 2015, 8:54 PM
+ * Last Editr: March 3, 2015
  */
 #include <fstream>
 #include <string>
 #include <cstdlib>
 #include <cstring>
 #include <exception>
-#include "rapidxml.hpp"
+//#include "rapidxml.hpp"
+#include "XmlParser.h"
 #include "ConfigReader.h"
 #include "Logger.h"
 
@@ -18,7 +20,8 @@ using std::ifstream;
 using std::ofstream;
 using std::exception;
 using std::ios;
-using namespace rapidxml;
+//using namespace rapidxml;
+using namespace XmlSpace;
 
 ConfigReader::ConfigReader()
 :configPath("./pchone.cfg"), port(DEFAULT_PORT)
@@ -33,6 +36,7 @@ ConfigReader::ConfigReader()
 ConfigReader::~ConfigReader()
 {
 }
+
 /*ConfigReader::ConfigReader(const std::string& configPath)
 :configPath(configPath), port(DEFAULT_PORT)
 {
@@ -73,10 +77,35 @@ void ConfigReader::parseConfig()
     else
     {
         char data[256];
-        bool invalid = false;
+        //bool invalid = false;
         in.read(data, size);
-        xml_document<> conf;
         in.close();
+        XmlParser myParser;
+        myParser.loadXmlTree(data);
+        bool rVal;
+        rVal = myParser.findNode("port");
+        if(rVal == false)
+        {
+            //port = DEFAULT_PORT;
+            //Do nothing, already set the value in constructor
+        }
+        else
+        {
+            string res;
+            myParser.getNodeValue(res);
+            port = atoi(res.c_str());
+        }
+        
+        rVal = myParser.findNode("passwd");
+        if(rVal == false)
+        {
+            //Do nothing, already set the value in constructor
+        }
+        else
+        {
+            myParser.getNodeValue(passwd);
+        }
+        /*xml_document<> conf;
         try
         {
             conf.parse<0>(data);
@@ -126,7 +155,7 @@ void ConfigReader::parseConfig()
                     createConfig();
                 }
             }
-        }
+        }*/
     }
 }
 
@@ -146,6 +175,7 @@ bool ConfigReader::createConfig()
     return true;
 }
 
-const string & ConfigReader::getPasswd() {
+const string & ConfigReader::getPasswd()
+{
     return passwd;
 }
