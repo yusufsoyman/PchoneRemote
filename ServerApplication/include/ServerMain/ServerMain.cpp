@@ -44,7 +44,12 @@ ServerMain::~ServerMain()
 
 void ServerMain::onClose(const int &fd, const struct sockaddr_in &remote)
 {
-    connTracker.erase(fd); //FIXME: need to check if this guy was in charge or not
+    pair<sockaddr_in, int> &sec = connTracker[fd];
+    if(sec.second == APPRVED)
+    {
+        inControl = false;
+    }
+    connTracker.erase(fd);
     char buffer[512];
     sprintf(buffer, "%s - %d: Connection closed from IP: %s", __FILE__, __LINE__, inet_ntoa(remote.sin_addr));
     logger -> printDebugLog(buffer);
