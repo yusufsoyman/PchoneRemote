@@ -51,7 +51,8 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 TESTFILES= \
 	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1 \
-	${TESTDIR}/TestFiles/f3
+	${TESTDIR}/TestFiles/f3 \
+	${TESTDIR}/TestFiles/f4
 
 # C Compiler Flags
 CFLAGS=
@@ -136,6 +137,10 @@ ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/soundTest.o ${OBJECTFILES:%.o=%_nomain
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} 
 
+${TESTDIR}/TestFiles/f4: ${TESTDIR}/tests/xmltest.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f4 $^ ${LDLIBSOPTIONS} 
+
 
 ${TESTDIR}/tests/dbtest.o: tests/dbtest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -153,6 +158,12 @@ ${TESTDIR}/tests/soundTest.o: tests/soundTest.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/soundTest.o tests/soundTest.cpp
+
+
+${TESTDIR}/tests/xmltest.o: tests/xmltest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/xmltest.o tests/xmltest.cpp
 
 
 ${OBJECTDIR}/include/ConfigReader/ConfigReader_nomain.o: ${OBJECTDIR}/include/ConfigReader/ConfigReader.o include/ConfigReader/ConfigReader.cpp 
@@ -268,6 +279,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	    ${TESTDIR}/TestFiles/f3 || true; \
+	    ${TESTDIR}/TestFiles/f4 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi
