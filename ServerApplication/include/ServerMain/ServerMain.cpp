@@ -44,7 +44,12 @@ ServerMain::~ServerMain()
 
 void ServerMain::onClose(const int &fd, const struct sockaddr_in &remote)
 {
-    connTracker.erase(fd); //FIXME: need to check if this guy was in charge or not
+    pair<sockaddr_in, int> &sec = connTracker[fd];
+    if(sec.second == APPRVED)
+    {
+        inControl = false;
+    }
+    connTracker.erase(fd);
     char buffer[512];
     sprintf(buffer, "%s - %d: Connection closed from IP: %s", __FILE__, __LINE__, inet_ntoa(remote.sin_addr));
     logger -> printDebugLog(buffer);
@@ -67,16 +72,19 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
     pair<sockaddr_in, int> &sec = connTracker[fd];
     if(sec.second == NEW) //if this is a new connection
     {
-        if(strncmp((char*)data, (char *)HELLO_MSG, size)) //if just searching for a server
+        if(atoi(reinterpret_cast<char*>(data)) == HELLO_MSG) //if just searching for a server
+        //if(strncmp((char*)data, (char *)HELLO_MSG, size)) //if just searching for a server
         {
             sprintf(buffer, "%s - %d: %s said \"HELLO\"", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
             logger -> printDebugLog(buffer);
-            send(fd, (unsigned char*)HELLO_MSG, 2);
+            sprintf(buffer, "%d", HELLO_MSG);
+            send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
             sprintf(buffer, "%s - %d: Responded to IP %s as \"HELLO\"", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
             logger -> printDebugLog(buffer);
             closeConnection(fd);
         }
-        else if(strncmp((char*)data, (char*)INIT_MSG, size)) //if tries to initialize a connection
+        else if(atoi((char*)data) == INIT_MSG) //if tries to initialize a connection
+        //else if(strncmp((char*)data, (char*)INIT_MSG, size)) //if tries to initialize a connection
         {
             sec.second = INIT;
             sprintf(buffer, "%s - %d: Initialization request from IP %s", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
@@ -85,13 +93,15 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
             {
                 sprintf(buffer, "%s - %d: Handshake request sent to IP %s", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
                 logger -> printInfoLog(buffer);
-                send(fd, (unsigned char *)HANDSHK_REQ_MSG, 2);
+                sprintf(buffer, "%d", HANDSHK_REQ_MSG);
+                send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
             }
             else
             {
                 sprintf(buffer, "%s - %d: Server is already being controlled. Illegal request from IP %s", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
                 logger -> printWarnLog(buffer);
-                send(fd, (unsigned char*)DENY_MSG, 2); //can't initialize, already in control
+                sprintf(buffer, "%d", DENY_MSG);
+                send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer)); //can't initialize, already in control
                 closeConnection(fd);
             }
         }
@@ -99,10 +109,11 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
     else if(sec.second == INIT)
     {
         ConfigReader *cfReader = ConfigReader::getInstance();
-        if(strncmp((char*)data, cfReader -> getPasswd().c_str(), size) == 0)
+        if(strncmp(reinterpret_cast<char*>(data), cfReader -> getPasswd().c_str(), cfReader -> getPasswd().size()) == 0)
         {
             sec.second = APPRVED;
-            send(fd, (unsigned char*)APPROVE_MSG, 2);
+            sprintf(buffer, "%d", APPROVE_MSG);
+            send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
             sprintf(buffer, "%s - %d: Client with IP %s is approved.", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
             logger -> printInfoLog(buffer);
             inControl = true;
@@ -111,13 +122,14 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
         {
             sprintf(buffer, "%s - %d: Client with IP %s is denied.", __FILE__, __LINE__, inet_ntoa(sec.first.sin_addr));
             logger -> printWarnLog(buffer);
-            send(fd, (unsigned char*)DENY_MSG, 2);
+            sprintf(buffer, "%d", DENY_MSG);
+            send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer)); 
             closeConnection(fd);
         }
     }
     else if (sec.second = APPRVED)
     {
-        int input = static_cast<int>(*data);
+        int input = atoi(reinterpret_cast<char*>(data));
         bool rVal;
         switch(input)
         {
@@ -127,11 +139,13 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
                 {
                     sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
                     logger -> printErrorLog(buffer);
-                    send(fd, (unsigned char*)ERROR_MSG, 2);
+                    sprintf(buffer, "%d", ERROR_MSG);
+                    send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 }
                 else
                 {
-                    send(fd, (unsigned char*)OK_MSG, 2);
+                    sprintf(buffer, "%d", OK_MSG);
+                    send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 }
                 break;
             case INCR_REQ:
@@ -140,11 +154,13 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
                 {
                     sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
                     logger -> printErrorLog(buffer);
-                    send(fd, (unsigned char*)ERROR_MSG, 2);
+                    sprintf(buffer, "%d", ERROR_MSG);
+                    send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 }
                 else
                 {
-                    send(fd, (unsigned char*)OK_MSG, 2);
+                    sprintf(buffer, "%d", OK_MSG);
+                    send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 }
                 break;
             case DECR_REQ:
@@ -153,18 +169,22 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
                 {
                     sprintf(buffer, "%s - %d: Can't execute request.", __FILE__, __LINE__);
                     logger -> printErrorLog(buffer);
-                    send(fd, (unsigned char*)ERROR_MSG, 2);
+                    sprintf(buffer, "%d", ERROR_MSG);
+                    send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 }
                 else
                 {
-                    send(fd, (unsigned char*)OK_MSG, 2);
+                    sprintf(buffer, "%d", OK_MSG);
+                    send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 }
                 break;
             case GET_VOL_REQ:
             {
                 float vol = sc.getCurrentVolumeLevel();
-                send(fd, (unsigned char*)OK_MSG, 2);
-                send(fd, (unsigned char*)&vol, 2);
+                sprintf(buffer, "%d", OK_MSG);
+                send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
+                sprintf(buffer, "%f", vol);
+                send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
             }
                 break;
             /*case SET_VOL_REQ: // no need
@@ -202,7 +222,8 @@ void ServerMain::onRecieve(const int &fd, unsigned char *data, const int &size)
             default:
                 sprintf(buffer, "%s - %d: Undefined request received.", __FILE__, __LINE__);
                 logger -> printWarnLog(buffer);
-                send(fd, (unsigned char*)DENY_MSG, 2);
+                sprintf(buffer, "%d", DENY_MSG);
+                send(fd, reinterpret_cast<unsigned char*>(buffer), strlen(buffer));
                 break;
         }
     }

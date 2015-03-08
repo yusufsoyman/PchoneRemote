@@ -498,8 +498,8 @@ void connHandler(NetworkHandler* obj, const int &fd)
         {
             sprintf(buffer, "%s - %d: Client didn't communicate for a very long time: %s. Connection closed.", __FILE__, __LINE__, inet_ntoa(obj->sockIPMap[fd].sin_addr));
             logger -> printInfoLog(buffer);
-//            obj->closeConnection(fd);
-//            keepConAlive = false; //close connection
+            obj->closeConnection(fd);
+            keepConAlive = false; //close connection
 //            break;
         }
         else if(obj->raw == false)
