@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/include/Network\ Handler/NetworkHandler.o \
 	${OBJECTDIR}/include/ServerMain/ServerMain.o \
 	${OBJECTDIR}/include/SoundController/SoundController.o \
+	${OBJECTDIR}/include/XmlParser/XmlParser.o \
 	${OBJECTDIR}/main.o
 
 # Test Directory
@@ -50,7 +51,8 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 TESTFILES= \
 	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1 \
-	${TESTDIR}/TestFiles/f3
+	${TESTDIR}/TestFiles/f3 \
+	${TESTDIR}/TestFiles/f4
 
 # C Compiler Flags
 CFLAGS=
@@ -108,6 +110,11 @@ ${OBJECTDIR}/include/SoundController/SoundController.o: include/SoundController/
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/SoundController/SoundController.o include/SoundController/SoundController.cpp
 
+${OBJECTDIR}/include/XmlParser/XmlParser.o: include/XmlParser/XmlParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/XmlParser
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/XmlParser/XmlParser.o include/XmlParser/XmlParser.cpp
+
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -130,6 +137,10 @@ ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/soundTest.o ${OBJECTFILES:%.o=%_nomain
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} 
 
+${TESTDIR}/TestFiles/f4: ${TESTDIR}/tests/xmltest.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f4 $^ ${LDLIBSOPTIONS} 
+
 
 ${TESTDIR}/tests/dbtest.o: tests/dbtest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -147,6 +158,12 @@ ${TESTDIR}/tests/soundTest.o: tests/soundTest.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/soundTest.o tests/soundTest.cpp
+
+
+${TESTDIR}/tests/xmltest.o: tests/xmltest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/xmltest.o tests/xmltest.cpp
 
 
 ${OBJECTDIR}/include/ConfigReader/ConfigReader_nomain.o: ${OBJECTDIR}/include/ConfigReader/ConfigReader.o include/ConfigReader/ConfigReader.cpp 
@@ -229,6 +246,19 @@ ${OBJECTDIR}/include/SoundController/SoundController_nomain.o: ${OBJECTDIR}/incl
 	    ${CP} ${OBJECTDIR}/include/SoundController/SoundController.o ${OBJECTDIR}/include/SoundController/SoundController_nomain.o;\
 	fi
 
+${OBJECTDIR}/include/XmlParser/XmlParser_nomain.o: ${OBJECTDIR}/include/XmlParser/XmlParser.o include/XmlParser/XmlParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/XmlParser
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/include/XmlParser/XmlParser.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/include/XmlParser/XmlParser_nomain.o include/XmlParser/XmlParser.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/include/XmlParser/XmlParser.o ${OBJECTDIR}/include/XmlParser/XmlParser_nomain.o;\
+	fi
+
 ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/main.o`; \
@@ -249,6 +279,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	    ${TESTDIR}/TestFiles/f3 || true; \
+	    ${TESTDIR}/TestFiles/f4 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi
