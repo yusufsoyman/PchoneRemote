@@ -1,0 +1,158 @@
+2015:4:17 22:48:51	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 22:48:51	ERROR	./include/ConfigReader/ConfigReader.cpp - 72: Config file ./pchone.cfg is corrupted
+				Rewriting it with default configuration.
+2015:4:17 22:48:51	INFO	./include/Network Handler/NetworkHandler.cpp - 250: Server started to listen port 63783 on 0.0.0.0.
+2015:4:17 22:49:20	INFO	main.cpp - 27: SIGINT caught
+2015:4:17 22:49:23	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 22:49:23	INFO	Loading XML Data...
+2015:4:17 22:49:23	INFO	Started parsing XML data
+2015:4:17 22:49:23	INFO	Started a new tree
+2015:4:17 22:49:23	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:17 23:13:51	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:13:51	INFO	Loading XML Data...
+2015:4:17 23:13:51	INFO	Started parsing XML data
+2015:4:17 23:13:51	INFO	Started a new tree
+2015:4:17 23:13:51	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:17 23:15:14	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:15:14	INFO	Loading XML Data...
+2015:4:17 23:15:14	INFO	Started parsing XML data
+2015:4:17 23:15:14	INFO	Started a new tree
+2015:4:17 23:15:14	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:17 23:19:40	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:19:40	INFO	Loading XML Data...
+2015:4:17 23:19:40	INFO	Started parsing XML data
+2015:4:17 23:19:40	INFO	Started a new tree
+2015:4:17 23:19:40	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:17 23:22:37	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:22:37	INFO	Loading XML Data...
+2015:4:17 23:22:37	INFO	Started parsing XML data
+2015:4:17 23:22:37	INFO	Started a new tree
+2015:4:17 23:22:37	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:17 23:23:20	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:23:20	INFO	Loading XML Data...
+2015:4:17 23:23:20	INFO	Started parsing XML data
+2015:4:17 23:23:20	INFO	Started a new tree
+2015:4:17 23:23:20	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:17 23:29:8	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:29:8	INFO	Loading XML Data...
+2015:4:17 23:29:8	INFO	Started parsing XML data
+2015:4:17 23:29:8	INFO	Started a new tree
+2015:4:17 23:29:8	INFO	./include/Network Handler/NetworkHandler.cpp - 250: Server started to listen port 63784 on 0.0.0.0.
+2015:4:17 23:30:30	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:17 23:30:33	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:17 23:30:33	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:17 23:30:35	WARNING	./include/ServerMain/ServerMain.cpp - 123: Client with IP 127.0.0.1 is denied.
+2015:4:17 23:30:35	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:17 23:30:37	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:17 23:30:38	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:17 23:30:38	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:17 23:30:48	INFO	./include/Network Handler/NetworkHandler.cpp - 618: Client is down: 127.0.0.1
+2015:4:17 23:30:48	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:17 23:31:58	INFO	main.cpp - 27: SIGINT caught
+2015:4:17 23:31:59	INFO	main.cpp - 27: SIGINT caught
+2015:4:17 23:32:24	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:17 23:32:24	INFO	Loading XML Data...
+2015:4:17 23:32:24	INFO	Started parsing XML data
+2015:4:17 23:32:24	INFO	Started a new tree
+2015:4:17 23:32:24	WARNING	./include/Network Handler/NetworkHandler.cpp - 232: Can't bind socket. Informed caller.
+2015:4:18 10:16:29	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:18 10:16:29	INFO	Loading XML Data...
+2015:4:18 10:16:29	INFO	Started parsing XML data
+2015:4:18 10:16:29	INFO	Started a new tree
+2015:4:18 10:16:29	INFO	./include/Network Handler/NetworkHandler.cpp - 250: Server started to listen port 63783 on 0.0.0.0.
+2015:4:18 10:17:49	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:18 10:17:59	INFO	./include/Network Handler/NetworkHandler.cpp - 618: Client is down: 127.0.0.1
+2015:4:18 10:17:59	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:18 10:18:4	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:18 10:18:6	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:18 10:18:6	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:18 10:18:16	INFO	./include/Network Handler/NetworkHandler.cpp - 618: Client is down: 127.0.0.1
+2015:4:18 10:18:16	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:18 10:30:29	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:18 10:30:39	INFO	./include/Network Handler/NetworkHandler.cpp - 618: Client is down: 127.0.0.1
+2015:4:18 10:30:39	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:18 10:30:49	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:18 10:30:59	INFO	./include/Network Handler/NetworkHandler.cpp - 618: Client is down: 127.0.0.1
+2015:4:18 10:30:59	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:18 10:31:0	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:18 10:31:2	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:18 10:31:2	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:18 10:31:3	WARNING	./include/ServerMain/ServerMain.cpp - 123: Client with IP 127.0.0.1 is denied.
+2015:4:18 10:31:3	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:18 11:6:51	INFO	main.cpp - 27: SIGINT caught
+2015:4:18 11:6:53	INFO	main.cpp - 27: SIGINT caught
+2015:4:29 23:3:14	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:29 23:3:14	INFO	Loading XML Data...
+2015:4:29 23:3:14	INFO	Started parsing XML data
+2015:4:29 23:3:14	INFO	Started a new tree
+2015:4:29 23:3:14	INFO	./include/Network Handler/NetworkHandler.cpp - 250: Server started to listen port 63783 on 0.0.0.0.
+2015:4:29 23:3:50	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:29 23:3:57	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:29 23:4:9	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:29 23:4:11	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:29 23:4:11	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:29 23:4:13	WARNING	./include/ServerMain/ServerMain.cpp - 123: Client with IP 127.0.0.1 is denied.
+2015:4:29 23:4:13	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:29 23:4:16	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:29 23:4:17	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:29 23:4:17	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:29 23:4:18	WARNING	./include/ServerMain/ServerMain.cpp - 123: Client with IP 127.0.0.1 is denied.
+2015:4:29 23:4:18	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:29 23:4:32	INFO	./include/Network Handler/NetworkHandler.cpp - 458: A new client connected to the server from 127.0.0.1.
+2015:4:29 23:4:36	INFO	./include/ServerMain/ServerMain.cpp - 90: Initialization request from IP 127.0.0.1
+2015:4:29 23:4:36	INFO	./include/ServerMain/ServerMain.cpp - 94: Handshake request sent to IP 127.0.0.1
+2015:4:29 23:4:46	INFO	./include/Network Handler/NetworkHandler.cpp - 618: Client is down: 127.0.0.1
+2015:4:29 23:4:46	INFO	./include/Network Handler/NetworkHandler.cpp - 362: Connection closed for IP: 127.0.0.1.
+2015:4:30 21:16:46	INFO	Logging system initialized with
+				Path: ./
+				Filename: pchoneremote.log
+				Log level: ERROR
+				Append flag: True
+2015:4:30 21:16:46	INFO	Loading XML Data...
+2015:4:30 21:16:46	INFO	Started parsing XML data
+2015:4:30 21:16:46	INFO	Started a new tree
+2015:4:30 21:16:46	INFO	./include/Network Handler/NetworkHandler.cpp - 250: Server started to listen port 63783 on 0.0.0.0.
