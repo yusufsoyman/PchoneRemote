@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LaptopRemoteControl</string>
+    <string name="action_settings">Settings</string>
+    <string name="play">PLAY</string>
+    <string name="volume">VOLUME</string>
+    <string name="brightness">BRIGHTNESS</string>
+    <string name="subtitle">SUBTITLE</string>
+    <string name="close">CLOSE PLAYER</string>
+    <string name="poweroff">POWEROFF</string>
+    <string name="pause_play">PAUSE</string>
+
+</resources>

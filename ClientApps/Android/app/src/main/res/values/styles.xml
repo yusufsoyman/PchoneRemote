@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!-- Bunu commentledim. YUSUF -->
+    <!-- <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"> -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+</resources>
