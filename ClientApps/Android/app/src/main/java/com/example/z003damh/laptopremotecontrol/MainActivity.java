@@ -2,20 +2,34 @@ package com.example.z003damh.laptopremotecontrol;
 
 import android.app.Activity;
 //import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class MainActivity extends Activity {
 
-    private Button mPauseButton;
+    public static final int SERVERPORT = 63783;
+    private static final String SERVER_IP = "127.0.0.1";
+    private Socket socket;
+
+    private Button mPauseButton, mConnectButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +52,60 @@ public class MainActivity extends Activity {
         });
     }
 
+    public void onConnectButtonClicked(View view) {
+
+        String clientRequest = "2";
+        //for connect button
+        mConnectButton = (Button)findViewById(R.id.connect);
+        mConnectButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String DEBUG_TAG = "NetworkStatusExample";
+
+                try
+                {
+                    //InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+                    socket = new Socket(SERVER_IP, SERVERPORT);
+                }
+                catch (UnknownHostException e1) {
+                    e1.printStackTrace();
+                }
+                catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                try
+                {
+                    PrintWriter out = new PrintWriter(new BufferedWriter(
+                            new OutputStreamWriter(socket.getOutputStream())),
+                            true);
+                }
+                catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //             ConnectivityManager connMgr = (ConnectivityManager)
+                //                   getSystemService(Context.CONNECTIVITY_SERVICE);
+                //NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//                boolean isWifiConn = networkInfo.isConnected();
+                //              networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                //            boolean isMobileConn = networkInfo.isConnected();
+          /*      NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                if(networkInfo != null) {
+                    boolean isDeviceConn = networkInfo.isConnected();
+                    Log.d(DEBUG_TAG, "Wifi connected: " + isDeviceConn);
+                }*/
+//                Log.d(DEBUG_TAG, "Wifi connected: " + isWifiConn);
+                //              Log.d(DEBUG_TAG, "Mobile connected: " + isMobileConn);
+
+            }
+        });
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

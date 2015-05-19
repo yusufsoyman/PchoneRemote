@@ -10,5 +10,8 @@
     <string name="close">CLOSE PLAYER</string>
     <string name="poweroff">POWEROFF</string>
     <string name="pause_play">PAUSE</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="wifi">WiFi</string>
+    <string name="connect">CONNECT</string>
 
 </resources>

@@ -8,13 +8,16 @@
     <eat-comment/>
     <string name="action_settings">Settings</string>
     <string name="app_name">LaptopRemoteControl</string>
+    <string name="bluetooth">Bluetooth</string>
     <string name="brightness">BRIGHTNESS</string>
     <string name="close">CLOSE PLAYER</string>
+    <string name="connect">CONNECT</string>
     <string name="pause_play">PAUSE</string>
     <string name="play">PLAY</string>
     <string name="poweroff">POWEROFF</string>
     <string name="subtitle">SUBTITLE</string>
     <string name="volume">VOLUME</string>
+    <string name="wifi">WiFi</string>
     <!-- From: file:/home/cisco1/Desktop/AndroidStudioProjects/LaptopRemoteControl/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
